@@ -1,0 +1,10 @@
+{
+	"network": {
+		"port": 8080,
+		"url": "intpantry",
+		"ip": "0.0.0.0"
+	},
+	"setup": {
+		"cert_name": "intpantry.crt"
+	}
+}
