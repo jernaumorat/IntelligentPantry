@@ -13,7 +13,10 @@ def get_items():
 
 @bp.route('/knownitems/', methods=['GET'])
 def get_allitems():
-    return jsonify(PantryItem.query.all())
+    data = []
+    for item in PantryItem.query.all():
+        data.append(item.to_dict())
+    return jsonify(data)
 
 @bp.route('/', methods=['POST'])
 def add_item():

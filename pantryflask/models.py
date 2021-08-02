@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
-
+from base64 import encodebytes
 from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.ext.declarative.api import declared_attr
 
 from pantryflask.db import db
 
@@ -9,6 +10,19 @@ class PantryItem(db.Model):
     item_label = db.Column(db.String, index=True, nullable=False)
     item_image = db.Column(db.LargeBinary)
     item_quantity = db.Column(db.Integer, index=True, nullable=False)
+
+    def to_dict(self):
+        data = {
+            'id': self.item_id,
+            'label': self.item_label,
+            'quantity': self.item_quantity
+        }
+        try:
+            data['image'] = encodebytes(self.item_image)
+        except:
+            pass
+        
+        return data
 
 class PantryAudit(db.Model):
     reciept_id = db.Column(db.Integer, primary_key=True)
