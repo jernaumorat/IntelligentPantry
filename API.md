@@ -42,7 +42,7 @@ The `/pantry/` endpoint responds to GET and POST requests. GET requests return a
 
 `/history` will accept a GET request only and will return all item transaction reciepts (created any time an item is updated).
 
-All of the above GET requests that do not return a single item support filtering by title or quantity with the `label=x` or 'quantity=[<|>|<=|=>|<>]n' parameters.
+All of the above GET requests that do not return a single item support filtering by title or quantity with the `label=x` or `quantity=[<|>|<=|=>|<>]n` parameters.
 
 ## `/robot/presets/`, `/robot/control/`
 `/presets/` GET requests will return a list of all camera position presets (titles and positions); POST requests will allow creating a new preset with `title` and `position` parameters (`parameter` must be in the form `(x,y)`).
