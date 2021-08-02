@@ -2,13 +2,13 @@ Database Schema
 ---------------
 
 ## List of Tables
-- PantryItems – all items, images, quantities
-- PantryAudit – transaction reciepts for all changes to PantryItems
-- RobotPresets – robot position presets
-- PairingCodes — codes created to generate bearer token on new device
-- AuthTokens – all bearer tokens
+- pantry_item – all items, images, quantities
+- pantry_audit – transaction reciepts for all changes to pantry_item
+- robot_preset – robot position presets
+- pairing_code — codes created to generate bearer token on new device
+- auth_token – all bearer tokens
 
-## PantryItems
+## pantry_item
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | item_id | autoincrement | PK | Numeric unique ID of item - may become guid or similar pending client feedback |
@@ -16,7 +16,7 @@ Database Schema
 | item_image | binary | none | Image of item or placeholder, not required |
 | item_quantity | integer | not null | Quantity of item present - if zero will not appear in app |
 
-## PantryAudit
+## pantry_audit
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | reciept_id | autoincrement | PK | Reciept ID |
@@ -29,7 +29,7 @@ Database Schema
 | quant_old | integer | none | Old quantity, if null, new item or no change |
 | quant_new | integer | none | New quantity, if null, no change |
 
-## RobotPresets
+## robot_preset
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | preset_id | autoincrement | PK | Preset ID |
@@ -37,13 +37,13 @@ Database Schema
 | preset_x | integer | not_null | x-coord of preset |
 | preset_y | integer | not_null | y-coord of preset |
 
-## PairingCodes
+## pairing_code
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | pair_code | string | PK | 4 random alphanumeric characters |
 | pair_expiry | datetime | not null | time code expires |
 
-## AuthTokens
+## auth_token
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | token_str | string | PK | base64-encoded random data, long (60ish char) |
