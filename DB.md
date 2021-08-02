@@ -1,5 +1,5 @@
 Database Schema
----------------
+===============
 
 ## List of Tables
 - pantry_item – all items, images, quantities

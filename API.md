@@ -1,5 +1,5 @@
 All Endpoints
--------------
+=============
 
 | Path                          | Accepted Methods  |
 | ----------------------------- | ----------------- |
@@ -20,7 +20,7 @@ All Endpoints
 | `/robot/control/left`         | POST              |
 
 Endpoint Description
---------------------
+====================
 
 All endpoints accept OPTIONS requests, which will return the allowed methods as well as server headers.
 Additionally, all endpoints (beside `/cert` and GET to `/pair`) require a valid bearer token, a missing or invalid bearer will result in a 401 Unauthorized response status and no response body.
