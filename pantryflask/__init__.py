@@ -6,7 +6,7 @@ from zeroconf import ServiceInfo, Zeroconf
 
 from pantryflask.config import FlaskConfig
 from pantryflask.auth import token_auth
-from pantryflask.models import db as model_db
+from pantryflask.db import db
 from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
 
@@ -14,8 +14,7 @@ def app_factory():
     app = Flask(__name__)
     app.config.from_object(FlaskConfig)
 
-    db = SQLAlchemy(app)
-    model_db.init_app(app)
+    db.init_app(app)
     migrate = Migrate(app, db)
 
     @app.route('/')

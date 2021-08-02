@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+from pantryflask.db import db
 
 class PantryItem(db.Model):
     item_id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +13,7 @@ class PantryItem(db.Model):
 class PantryAudit(db.Model):
     reciept_id = db.Column(db.Integer, primary_key=True)
     reciept_time = db.Column(db.DateTime, index=True, default=datetime.now(), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey('PantryItem.item_id'))
+    item_id = db.Column(db.Integer, db.ForeignKey('pantry_item.item_id'))
     label_old = db.Column(db.String)
     label_new = db.Column(db.String)
     image_old = db.Column(db.LargeBinary)

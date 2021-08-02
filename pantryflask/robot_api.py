@@ -1,5 +1,8 @@
 from flask import Blueprint, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
+
+from pantryflask.db import db
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
