@@ -6,6 +6,7 @@ from zeroconf import ServiceInfo, Zeroconf
 
 from pantryflask.config import FlaskConfig
 from pantryflask.auth import token_auth
+from pantryflask.models import db as model_db
 from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
 
@@ -14,10 +15,8 @@ def app_factory():
     app.config.from_object(FlaskConfig)
 
     db = SQLAlchemy(app)
+    model_db.init_app(app)
     migrate = Migrate(app, db)
-
-    app.register_blueprint(pantry_bp)
-    app.register_blueprint(robot_bp)
 
     @app.route('/')
     @token_auth.login_required
@@ -36,6 +35,9 @@ def app_factory():
     @token_auth.login_required
     def generate_pairing_codes():
         pass
+
+    app.register_blueprint(pantry_bp)
+    app.register_blueprint(robot_bp)
 
     return app, db, migrate
 

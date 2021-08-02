@@ -1,6 +1,8 @@
-import datetime
+from datetime import datetime, timedelta
 
-from pantryflask import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 class PantryItem(db.Model):
     item_id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +12,7 @@ class PantryItem(db.Model):
 
 class PantryAudit(db.Model):
     reciept_id = db.Column(db.Integer, primary_key=True)
-    reciept_time = db.Column(db.DateTime, index=True, default=datetime.utcnow, nullable=False)
+    reciept_time = db.Column(db.DateTime, index=True, default=datetime.now(), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey('PantryItem.item_id'))
     label_old = db.Column(db.String)
     label_new = db.Column(db.String)
@@ -27,8 +29,8 @@ class RobotPreset(db.Model):
 
 class PairingCode(db.Model):
     pair_code = db.Column(db.String, primary_key=True)
-    pair_expiry = db.Column(db.DateTime, default=datetime.utcnow + datetime.timedelta(hours=1), nullable=False)
+    pair_expiry = db.Column(db.DateTime, default=datetime.now() + timedelta(hours=1), nullable=False)
 
 class AuthToken(db.Model):
     token_id = db.Column(db.Integer, primary_key=True)
-    token_birth = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    token_birth = db.Column(db.DateTime, default=datetime.now(), nullable=False)
