@@ -20,6 +20,7 @@ Database Schema
 | Column Name | Datatype | Constraints | Description |
 | ----------- | -------- | ----------- | ----------- |
 | reciept_id | autoincrement | PK | Reciept ID |
+| reciept_time | datetime | not_null | Reciept timestamp |
 | item_id | integer | FK, not null | ID of item modified |
 | label_old | string | none | Old label, if null, new item or no change |
 | label_new | string | none | New label, if null, no change |
