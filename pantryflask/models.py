@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from base64 import encodebytes
+from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 #from sqlalchemy.ext.declarative.api import declared_attr
 
@@ -21,7 +22,7 @@ class PantryItem(db.Model):
             data['image'] = encodebytes(self.item_image)
         except:
             pass
-        
+
         return data
 
 class PantryAudit(db.Model):
@@ -37,7 +38,7 @@ class PantryAudit(db.Model):
 
     def to_dict(self):
         data = {
-            'recptId': self.reciept_id,
+            'recieptId': self.reciept_id,
             'recieptTime': self.reciept_time,
             'itemId': self.item_id,
             'labelOld': self.label_old,
@@ -60,34 +61,38 @@ class RobotPreset(db.Model):
     preset_y = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
-    data = {
-        'preId': self.preset_id,
-        'label': self.preset_label,
-        'setX': self.preset_x,
-        'setY': self.preset_y
-    }
-    
-    return data
+        data = {
+            'presetId': self.preset_id,
+            'label': self.preset_label,
+            'presetX': self.preset_x,
+            'presetY': self.preset_y
+        }
+
+        return data
 
 class PairingCode(db.Model):
     pair_code = db.Column(db.String, primary_key=True)
     pair_expiry = db.Column(db.DateTime, default=datetime.now() + timedelta(hours=1), nullable=False)
 
     def to_dict(self):
-    data = {
-        'code': self.pair_code,
-        'expiry': self.pair_expiry,
-    }
-    
-    return data
+        data = {
+            'code': self.pair_code,
+            'expiry': self.pair_expiry,
+        }
+
+        return data
 
 
 class AuthToken(db.Model):
     token_id = db.Column(db.Integer, primary_key=True)
+    token_data = db.Column(db.String, unique=True, nullable=False, index=True)
     token_birth = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     def to_dict(self):
-    data = {
-        'id': self.token_id,
-        'tokBirth': self.token_birth
-    }
+        data = {
+            'id': self.token_id,
+            'token': self.token_data,
+            'tokBirth': self.token_birth
+        }
+
+        return data
