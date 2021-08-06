@@ -35,16 +35,59 @@ class PantryAudit(db.Model):
     quant_old = db.Column(db.Integer)
     quant_new = db.Column(db.Integer)
 
+    def to_dict(self):
+        data = {
+            'recptId': self.reciept_id,
+            'recieptTime': self.reciept_time,
+            'itemId': self.item_id,
+            'labelOld': self.label_old,
+            'labelNew': self.label_new,
+            'quantityOld': self.quant_old,
+            'quantityNew': self. quant_new
+        }
+        try:
+            data['imageOld'] = encodebytes(self.image_old)
+            data['imageNew'] = encodebytes(self.image_old)
+        except:
+            pass
+        
+        return data
+
 class RobotPreset(db.Model):
     preset_id = db.Column(db.Integer, primary_key=True)
     preset_label = db.Column(db.String)
     preset_x = db.Column(db.Integer, nullable=False)
     preset_y = db.Column(db.Integer, nullable=False)
 
+    def to_dict(self):
+    data = {
+        'preId': self.preset_id,
+        'label': self.preset_label,
+        'setX': self.preset_x,
+        'setY': self.preset_y
+    }
+    
+    return data
+
 class PairingCode(db.Model):
     pair_code = db.Column(db.String, primary_key=True)
     pair_expiry = db.Column(db.DateTime, default=datetime.now() + timedelta(hours=1), nullable=False)
 
+    def to_dict(self):
+    data = {
+        'code': self.pair_code,
+        'expiry': self.pair_expiry,
+    }
+    
+    return data
+
+
 class AuthToken(db.Model):
     token_id = db.Column(db.Integer, primary_key=True)
     token_birth = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+
+    def to_dict(self):
+    data = {
+        'id': self.token_id,
+        'tokBirth': self.token_birth
+    }
