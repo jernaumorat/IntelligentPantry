@@ -54,4 +54,7 @@ def delete_item(itemID):
 
 @bp.route('/knownitems/<int:itemID>', methods=['DELETE'])
 def delete_item_perm(itemID):
-    pass
+    item = PantryItem.query.get(itemID)
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify("OK")
