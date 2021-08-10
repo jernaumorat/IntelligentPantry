@@ -18,10 +18,6 @@ class PantryItem(db.Model):
             'label': self.item_label,
             'quantity': self.item_quantity
         }
-        try:
-            data['image'] = encodebytes(self.item_image)
-        except:
-            pass
 
         return data
 
@@ -46,11 +42,6 @@ class PantryAudit(db.Model):
             'quantityOld': self.quant_old,
             'quantityNew': self. quant_new
         }
-        try:
-            data['imageOld'] = encodebytes(self.image_old)
-            data['imageNew'] = encodebytes(self.image_old)
-        except:
-            pass
         
         return data
 
