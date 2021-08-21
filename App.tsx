@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   StyleSheet,
@@ -28,6 +28,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import SplashScreen from 'react-native-splash-screen';
 
 import { RobotScreen } from './RobotScreen'
 import { PantryScreen } from './PantryScreen'
@@ -40,6 +41,10 @@ const App = (): JSX.Element => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    SplashScreen.hide()
+  }, [])
 
   // TODO: fix url passing
   return (
