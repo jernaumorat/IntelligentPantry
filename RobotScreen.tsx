@@ -58,9 +58,7 @@ export const RobotScreen = (props: any): JSX.Element => {
             style={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column', backgroundColor: 'white' }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 5, backgroundColor: 'transparent' }}>
-                        <Image style={{ height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/pantry/knownitems/3/img' }} />
-                    </View>
+                    <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/pantry/knownitems/3/img' }} />
                     <View style={{ flex: 2, flexDirection: 'row', backgroundColor: 'green' }}>
                         <View style={{ flex: 7, justifyContent: 'space-around', backgroundColor: 'yellowgreen' }}>
                             <Picker selectedValue={preset} onValueChange={itemValue => setPreset(itemValue)}>

@@ -27,14 +27,28 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SplashScreen from 'react-native-splash-screen';
 
 import { RobotScreen } from './RobotScreen'
-import { PantryScreen } from './PantryScreen'
+import PantryScreen from './PantryScreen'
+import PantryDetail from './PantryDetail'
 import { SettingsScreen } from './SettingsScreen'
 
 const Tab = createBottomTabNavigator();
+
+const PantryStack = createNativeStackNavigator();
+
+const PantryStackScreen = (props: any): JSX.Element => {
+  return (
+    <PantryStack.Navigator>
+      <PantryStack.Screen name="AllItems" component={PantryScreen} options={{ headerShown: false }} />
+      <PantryStack.Screen name="Item Detail" component={PantryDetail} />
+    </PantryStack.Navigator>
+  )
+}
 
 const App = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -71,7 +85,7 @@ const App = (): JSX.Element => {
         }
       })}>
         <Tab.Screen name="Robot" component={RobotScreen} />
-        <Tab.Screen name="Pantry" component={PantryScreen} />
+        <Tab.Screen name="Pantry" component={PantryStackScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>

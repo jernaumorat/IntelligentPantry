@@ -1,3 +1,4 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React, {
   useState,
   useEffect,
@@ -13,6 +14,7 @@ import {
   View,
   Image,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 
 // TODO: remove all NewAppScreen imports, then remove from package deps.
@@ -61,7 +63,7 @@ const pitems_from_api = async (url: string): Promise<PItem[]> => {
   return data
 }
 
-export const PantryScreen = (props: any): JSX.Element => {
+const PantryScreen = ({ navigation }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
@@ -82,7 +84,8 @@ export const PantryScreen = (props: any): JSX.Element => {
     const final = []
 
     for (let pItem of data) {
-      final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} />)
+      final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
+        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />)
     }
 
     return final
@@ -122,10 +125,14 @@ export const PantryScreen = (props: any): JSX.Element => {
 
 const PantryItem = (props: any): JSX.Element => {
   return (
-    <View style={[PantryStyles.pantryItem]}>
-      <Image style={[PantryStyles.pantryItemContent, { flex: 2, backgroundColor: 'white', height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri }} />
-      <Text style={[PantryStyles.pantryItemContent, { flex: 7, backgroundColor: 'white', fontSize: 30, }]}>{props.itemLabel}</Text>
-      <Text style={[PantryStyles.pantryItemContent, { flex: 1, backgroundColor: 'white', fontSize: 30, }]}>{props.itemQuant}</Text>
-    </View>
+    <TouchableOpacity onPress={props.onPress}>
+      <View style={[PantryStyles.pantryItem]}>
+        <Image style={[PantryStyles.pantryItemContent, { flex: 2, backgroundColor: 'white', height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri }} />
+        <Text style={[PantryStyles.pantryItemContent, { flex: 7, backgroundColor: 'white', fontSize: 30, }]}>{props.itemLabel}</Text>
+        <Text style={[PantryStyles.pantryItemContent, { flex: 1, backgroundColor: 'white', fontSize: 30, }]}>{props.itemQuant}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
+
+export default PantryScreen;
