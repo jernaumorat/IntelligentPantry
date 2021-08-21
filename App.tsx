@@ -17,7 +17,7 @@ import {
   useColorScheme,
   View,
   Image,
-  RefreshControl,
+  Platform,
 } from 'react-native';
 
 // TODO: remove all NewAppScreen imports, then remove from package deps.
@@ -32,6 +32,8 @@ import {
 import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { RobotScreen } from './RobotScreen'
 import { PantryScreen } from './PantryScreen'
@@ -48,7 +50,27 @@ const App = (): JSX.Element => {
   // TODO: fix url passing
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Pantry">
+      <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          let osPrefix = (Platform.OS == ('ios' || 'macos')) ? 'ios-' : 'md-'
+          switch (route.name) {
+            case 'Robot':
+              iconName = osPrefix + 'camera'
+              break
+            case 'Pantry':
+              iconName = osPrefix + 'nutrition'
+              break
+            case 'Settings':
+              iconName = osPrefix + 'cog'
+              break;
+            default:
+              iconName = osPrefix + 'help-buoy'
+          }
+
+          return (<Ionicons name={iconName} size={size} color={color} />)
+        }
+      })}>
         <Tab.Screen name="Robot" component={RobotScreen} />
         <Tab.Screen name="Pantry" component={PantryScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
