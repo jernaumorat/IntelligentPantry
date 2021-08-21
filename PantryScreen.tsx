@@ -71,7 +71,7 @@ export const PantryScreen = (props: any): JSX.Element => {
   // TODO: move all light/dark mode to context
   const isDarkMode = useColorScheme() === 'dark';
 
-  const apiUrl = 'http://192.168.0.248:5000/pantry/knownitems/';
+  const apiUrl = 'http://192.168.0.220:5000/pantry/knownitems/';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

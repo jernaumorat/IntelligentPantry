@@ -23,6 +23,8 @@ target 'intpantryRN' do
   # you should disable the next line.
   #use_flipper!()
 
+  #pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   post_install do |installer|
     installer.aggregate_targets.each do |aggregate_target|
       aggregate_target.user_project.native_targets.each do |target|

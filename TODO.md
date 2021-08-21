@@ -1,0 +1,1 @@
+* If net request fails on first load, app softlocks with no way to refresh. Handle request failure.
