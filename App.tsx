@@ -3,21 +3,15 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, {
-  useState,
-  useEffect,
-} from 'react';
+import React from 'react';
 
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
+  Platform,
+  Text,
   View,
   Image,
-  Platform,
 } from 'react-native';
 
 // TODO: remove all NewAppScreen imports, then remove from package deps.
@@ -75,9 +69,6 @@ const App = (): JSX.Element => {
         <Tab.Screen name="Pantry" component={PantryScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
-      {/* <SafeAreaView style={backgroundStyle}> */}
-      {/* <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} /> */}
-      {/* </SafeAreaView> */}
     </NavigationContainer>
   );
 };
