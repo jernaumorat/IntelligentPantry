@@ -33,6 +33,7 @@ import {
 import {
     Picker
 } from '@react-native-picker/picker';
+import PresetComponent from './components/presetComponent';
 
 interface ArrowProps {
     direction: 'up' | 'down' | 'left' | 'right',
@@ -59,24 +60,7 @@ export const RobotScreen = (props: any): JSX.Element => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
                     <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/pantry/knownitems/3/img' }} />
-                    <View style={{ flex: 2, flexDirection: 'row', backgroundColor: 'green' }}>
-                        <View style={{ flex: 7, justifyContent: 'space-around', backgroundColor: 'yellowgreen' }}>
-                            <Picker selectedValue={preset} onValueChange={itemValue => setPreset(itemValue)}>
-                                <Picker.Item label="Preset 1" value='1' />
-                                <Picker.Item label="Preset 2" value='2' />
-                                <Picker.Item label="Preset 3" value='3' />
-                                <Picker.Item label="Preset 4" value='4' />
-                                <Picker.Item label="Preset 5" value='5' />
-                                <Picker.Item label="Preset 6" value='6' />
-                                <Picker.Item label="Preset 7" value='7' />
-                                <Picker.Item label="Preset 8" value='8' />
-                            </Picker>
-                        </View>
-                        <View style={{ flex: 3, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: 'darkolivegreen' }}>
-                            <Button title={"Recall"} onPress={() => { }} />
-                            <Button title={"Create"} onPress={() => { }} />
-                        </View>
-                    </View>
+                    <PresetComponent/>                    
                     <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: 'blue' }}>
                         <View style={{ flex: 7, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: 'cyan' }}>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', backgroundColor: 'lightgrey' }}>
