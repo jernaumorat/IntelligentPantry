@@ -11,6 +11,7 @@ import {
     Text,
     useColorScheme,
     View,
+    Button,
     Image,
     RefreshControl,
 } from 'react-native';
@@ -22,6 +23,10 @@ import {
 
 export const SettingsScreen = (props: any): JSX.Element => {
     return (
-        <View></View>
+            <View style={{flex: 1,paddingLeft:30, paddingRight: 30, justifyContent:'space-evenly'}}>
+                <Button title={"Scan"} onPress={() => { }} />
+                <Button title={"Pair"} onPress={() => { }} />
+                <Button title={"Dev Mode"} onPress={() => { }} />
+            </View>
     )
 }
