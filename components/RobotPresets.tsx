@@ -42,4 +42,3 @@ const style = StyleSheet.create({
         backgroundColor: 'yellowgreen', 
     }
 });
-//export default RobotPreset;
