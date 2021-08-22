@@ -7,22 +7,30 @@ import {
     Button,
     StyleSheet,
     TextInput,
-    
+    Text,
 } from 'react-native';
-import {
-    Picker
-} from '@react-native-picker/picker';
 
 export const RobotCoordinate = (props:any): JSX.Element=> {
     const [xPos, setxPos] = useState('0')
     const [yPos, setyPos] = useState('0')
     return (
-        <View style={{ flex: 3, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: 'deepskyblue' }}>
+        <View style={{ flex: 3, flexDirection: 'column', justifyContent: 'space-evenly'}}>
             {/* TODO: Make these TextInputs into components */}
-            <TextInput value={xPos} onChangeText={setxPos} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
-            <TextInput value={yPos} onChangeText={setyPos} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
-            <Button title={"Go"} onPress={() => { }} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <TextInput style={[style.textInput,{flex:2}]} editable={false} textAlign={'right'}>X</TextInput>
+                <TextInput style={[style.textInput,{flex:5}]} maxLength={4} value={xPos} onChangeText={setxPos} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <TextInput style={[style.textInput,{flex:2}]} editable={false} textAlign={'right'}>Y</TextInput>
+                <TextInput style={[style.textInput,{flex:5}]} maxLength={4} value={yPos} onChangeText={setyPos} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
+            </View>
+            <Button color='#1b7931' title={"Go"} onPress={() => { }} />
         </View>
     );
 }
-//export default CoordinateComponent;
+
+const style = StyleSheet.create({
+    textInput:{
+        color:'#1b7931',
+    }
+});

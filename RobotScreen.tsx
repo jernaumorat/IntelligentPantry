@@ -44,13 +44,13 @@ export const RobotScreen = (props: any): JSX.Element => {
 
     return (
         <KeyboardAvoidingView behavior={'position'}
-            contentContainerStyle={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column', backgroundColor: 'white' }}
-            style={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column', backgroundColor: 'white' }}>
+            contentContainerStyle={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column' }}
+            style={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column' }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
                     <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/pantry/knownitems/3/img' }} />
                     <RobotPreset/>                    
-                    <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: 'blue' }}>
+                    <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly', borderTopColor:'brown',borderTopWidth: 1 }}>
                         <RobotControls />
                         <RobotCoordinate />
                     </View>

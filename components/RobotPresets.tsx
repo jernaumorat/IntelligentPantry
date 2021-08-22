@@ -15,8 +15,10 @@ import { create } from 'react-test-renderer';
 export const RobotPreset = (props: any): JSX.Element => {
     const [preset, setPreset] = useState('')
     return (
-        <View style={{ flex: 2, flexDirection: 'row', backgroundColor: 'grey' }}>
-            <View style={style.pickerView}>
+        // 50c878
+        // 046307
+        <View style={{flex: 2,flexDirection: 'row'}}>
+            <View style={[style.pickerView,{flex: 7}]}>
                 <Picker selectedValue={preset} onValueChange={itemValue => setPreset(itemValue)}>
                     <Picker.Item label="Preset 1" value='1' />
                     <Picker.Item label="Preset 2" value='2' />
@@ -28,17 +30,17 @@ export const RobotPreset = (props: any): JSX.Element => {
                     <Picker.Item label="Preset 8" value='8' />
                 </Picker>
             </View>
-            <View style={{ flex: 3, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: 'yellowgreen' }}>
-                <Button title={"Recall"} onPress={() => { }} />
-                <Button title={"Create"} onPress={() => { }} />
+            <View style={[style.pickerView, {flex: 3}]}>
+                <Button title={"Recall"} color='#1b7931' onPress={() => { }} />
+                <Button title={"Create"} color='#1b7931' onPress={() => { }} />
             </View>
         </View>
     );
 }
+
 const style = StyleSheet.create({
     pickerView: {
-        flex: 7, 
+        flexDirection: 'column',
         justifyContent: 'space-around',
-        backgroundColor: 'yellowgreen', 
     }
 });

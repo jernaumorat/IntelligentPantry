@@ -11,11 +11,11 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 export const RobotControls = (props:any): JSX.Element=> {
     return (
-        <View style={{ flex: 7, flexDirection: 'column', justifyContent: 'space-evenly', backgroundColor: 'cyan' }}>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', backgroundColor: 'lightgrey' }}>
+        <View style={{ flex: 7, flexDirection: 'column' }}>
+            <View style={style.controlsView}>
                 <ArrowButton direction={'up'} size={64} />
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', backgroundColor: 'darkgrey' }}>
+            <View style={style.controlsView}>
                 <ArrowButton direction={'left'} size={64} />
                 <ArrowButton direction={'down'} size={64} />
                 <ArrowButton direction={'right'} size={64} />
@@ -36,3 +36,11 @@ const ArrowButton = (props: ArrowProps): JSX.Element => {
         </TouchableOpacity>
     )
 }
+const style = StyleSheet.create({
+    controlsView: {  
+        flex: 1, 
+        flexDirection: 'row',      
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+    },
+});
