@@ -33,9 +33,9 @@ import {
 import {
     Picker
 } from '@react-native-picker/picker';
-import {RobotPreset} from './components/RobotPresets';
-import {RobotControls} from './components/RobotControl';
-import {RobotCoordinate} from './components/RobotCoordinate';
+import { RobotPreset } from './components/RobotPresets';
+import { RobotControls } from './components/RobotControl';
+import { RobotCoordinate } from './components/RobotCoordinate';
 
 export const RobotScreen = (props: any): JSX.Element => {
     const [xPos, setxPos] = useState('0')
@@ -48,9 +48,9 @@ export const RobotScreen = (props: any): JSX.Element => {
             style={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column' }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
-                    <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/pantry/knownitems/3/img' }} />
-                    <RobotPreset/>                    
-                    <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly', borderTopColor:'brown',borderTopWidth: 1 }}>
+                    <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: 'http://192.168.0.248:5000/robot/camera' }} />
+                    <RobotPreset />
+                    <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly' }}>
                         <RobotControls />
                         <RobotCoordinate />
                     </View>

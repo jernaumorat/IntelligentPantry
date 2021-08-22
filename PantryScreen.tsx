@@ -32,14 +32,12 @@ interface PItem {
 const PantryStyles = StyleSheet.create({
   pantryItem: {
     flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    // margin: 5,
+    backgroundColor: 'white',
+    // alignItems: 'center',
+    margin: 10,
   },
   pantryItemContent: {
     padding: 10,
-    height: '100%',
   },
 })
 
@@ -127,9 +125,9 @@ const PantryItem = (props: any): JSX.Element => {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={[PantryStyles.pantryItem]}>
-        <Image style={[PantryStyles.pantryItemContent, { flex: 2, backgroundColor: 'white', height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri }} />
-        <Text style={[PantryStyles.pantryItemContent, { flex: 7, backgroundColor: 'white', fontSize: 30, }]}>{props.itemLabel}</Text>
-        <Text style={[PantryStyles.pantryItemContent, { flex: 1, backgroundColor: 'white', fontSize: 30, }]}>{props.itemQuant}</Text>
+        <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri }} />
+        <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, }]}>{props.itemLabel}</Text>
+        <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, }]}>{props.itemQuant}</Text>
       </View>
     </TouchableOpacity>
   );

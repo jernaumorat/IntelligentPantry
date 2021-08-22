@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-export const RobotControls = (props:any): JSX.Element=> {
+export const RobotControls = (props: any): JSX.Element => {
     return (
         <View style={{ flex: 7, flexDirection: 'column' }}>
             <View style={style.controlsView}>

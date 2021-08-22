@@ -82,7 +82,8 @@ const App = (): JSX.Element => {
           }
 
           return (<Ionicons name={iconName} size={size} color={color} />)
-        }
+        },
+        tabBarActiveTintColor: '#1b7931',
       })}>
         <Tab.Screen name="Robot" component={RobotScreen} />
         <Tab.Screen name="Pantry" component={PantryStackScreen} />
