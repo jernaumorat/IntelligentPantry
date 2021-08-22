@@ -40,6 +40,7 @@ def get_item_image(itemID):
     image = item.item_image
     response = make_response(image)
     response.headers.set('Content-Type', 'image/jpeg')
+    response.headers.set('Cache-Control', 'max-age=86400')
 
     return response
 
