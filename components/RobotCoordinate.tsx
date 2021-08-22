@@ -7,13 +7,13 @@ import {
     Button,
     StyleSheet,
     TextInput,
-    
+
 } from 'react-native';
 import {
     Picker
 } from '@react-native-picker/picker';
 
-export const RobotCoordinate = (props:any): JSX.Element=> {
+export const RobotCoordinate = (props: any): JSX.Element => {
     const [xPos, setxPos] = useState('0')
     const [yPos, setyPos] = useState('0')
     return (

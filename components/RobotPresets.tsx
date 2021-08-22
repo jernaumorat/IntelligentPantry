@@ -37,8 +37,8 @@ export const RobotPreset = (props: any): JSX.Element => {
 }
 const style = StyleSheet.create({
     pickerView: {
-        flex: 7, 
+        flex: 7,
         justifyContent: 'space-around',
-        backgroundColor: 'yellowgreen', 
+        backgroundColor: 'yellowgreen',
     }
 });
