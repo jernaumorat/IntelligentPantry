@@ -32,14 +32,14 @@ interface ArrowProps {
 const ArrowButton = (props: ArrowProps): JSX.Element => {
     return (
         <TouchableOpacity>
-            <Icon name={'caret' + props.direction} size={props.size} />
+            <Icon name={'caret' + props.direction} size={props.size} color={'#1b7931'} />
         </TouchableOpacity>
     )
 }
 const style = StyleSheet.create({
-    controlsView: {  
-        flex: 1, 
-        flexDirection: 'row',      
+    controlsView: {
+        flex: 1,
+        flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
     },
