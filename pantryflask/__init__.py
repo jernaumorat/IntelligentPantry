@@ -9,6 +9,7 @@ from pantryflask.auth import token_auth
 from pantryflask.db import db
 from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
+from pantryflask.util import bp as util_bp
 
 def app_factory():
     app = Flask(__name__)
@@ -30,12 +31,13 @@ def app_factory():
         pass
 
     @app.route('/pair', methods=['POST'])
-    @token_auth.login_required
+    @token_auth.login_required(role=['user'])
     def generate_pairing_codes():
-        pass
+        return jsonify('success')
 
     app.register_blueprint(pantry_bp)
     app.register_blueprint(robot_bp)
+    app.register_blueprint(util_bp)
 
     return app, db, migrate
 

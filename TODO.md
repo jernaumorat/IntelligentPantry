@@ -8,8 +8,8 @@ TODO
   - [x] Remove Audit/reciept model
   - [x] Add x/y coords to item model
   - [x] Add SystemStatus model, for time of last scan and system state
-- [ ] Complete auth procedure, modify model to distinguish robot and user tokens
-  - [ ] Add flask command to create robot token
+- [x] Complete auth procedure, modify model to distinguish robot and user tokens
+  - [x] Add flask command to create robot token
 - [ ] Set up deployment:
   - [ ] Set up lighttpd and fcgi to test production environment
   - [ ] add flask commands for first-run configuration (initial pairing code, generate server secret etc)

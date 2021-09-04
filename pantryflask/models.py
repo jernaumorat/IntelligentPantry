@@ -56,8 +56,8 @@ class PairingCode(db.Model):
 
 
 class AuthToken(db.Model):
-    token_id = db.Column(db.Integer, primary_key=True)
-    token_data = db.Column(db.String, unique=True, nullable=False, index=True)
+    token_data = db.Column(db.String, primary_key=True)
+    token_class = db.Column(db.String, nullable=False)
     token_birth = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     def to_dict(self):
