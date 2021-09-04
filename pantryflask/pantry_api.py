@@ -9,53 +9,52 @@ from pantryflask.models import PantryAudit, PantryItem
 bp = Blueprint('pantry', __name__, url_prefix='/pantry')
 
 @bp.route('/', methods=['GET'])
-def get_items():
-    return jsonify({'pantry': 'pantry'})
-
-@bp.route('/knownitems/', methods=['GET'])
 def get_allitems():
     data = []
     for item in PantryItem.query.all():
         data.append(item.to_dict())
-    return jsonify(data)
+    
+    resp = jsonify(data)
+    if data == []:
+        return resp, 204
+    
+    return resp
 
 @bp.route('/', methods=['POST'])
 def add_item():
     payload = loads(request.form.get('payload'))
     img = request.files['image'] or None
     new_item = PantryItem(item_label=payload['label'], item_quantity=payload['quantity'], item_image=img.read())
+
     db.session.add(new_item)
     db.session.commit()
-    return jsonify("OK")
 
-@bp.route('/knownitems/<int:itemID>', methods=['GET'])
+    resp = jsonify(new_item.to_dict())
+    resp.headers.set('Location', f'{request.base_url}{new_item.item_id}')
+    
+    return resp, 201
+
 @bp.route('/<int:itemID>', methods=['GET'])
 def get_item(itemID):
     pass
 
-@bp.route('/knownitems/<int:itemID>/img', methods=['GET'])
 @bp.route('/<int:itemID>/img', methods=['GET'])
 def get_item_image(itemID):
     item = PantryItem.query.get(itemID)
     image = item.item_image
-    response = make_response(image)
-    response.headers.set('Content-Type', 'image/jpeg')
-    response.headers.set('Cache-Control', 'max-age=86400')
+    
+    resp = make_response(image)
+    resp.headers.set('Content-Type', 'image/jpeg')
+    resp.headers.set('Cache-Control', 'max-age=86400')
 
-    return response
-
-@bp.route('/knownitems/<int:itemID>', methods=['PUT'])
-@bp.route('/<int:itemID>', methods=['PUT'])
-def update_item(itemID):
-    pass
+    return resp
 
 @bp.route('/<int:itemID>', methods=['DELETE'])
 def delete_item(itemID):
-    pass
-
-@bp.route('/knownitems/<int:itemID>', methods=['DELETE'])
-def delete_item_perm(itemID):
     item = PantryItem.query.get(itemID)
     db.session.delete(item)
     db.session.commit()
-    return jsonify("OK")
+    
+    resp = jsonify("OK")
+    
+    return resp

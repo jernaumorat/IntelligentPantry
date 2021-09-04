@@ -15,4 +15,4 @@ TODO
   - Test http/https deployment with self-signed cert, and installation of cert to mobile devices.
 - Comment all code, at very least with descriptions of each endpoint.
 - Unit test each endpoint/method
-- Correctly handle all failure cases with HTTP codes, not just failing with 500s.
+- Correctly handle all failure cases with HTTP codes, not just failing with 500s. (And success cases, 201 204 etc not just 200)
