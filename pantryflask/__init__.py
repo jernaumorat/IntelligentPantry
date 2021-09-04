@@ -1,6 +1,8 @@
+import socket, os
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask.helpers import send_from_directory, url_for
 from zeroconf import ServiceInfo, Zeroconf
 
 from pantryflask.config import FlaskConfig
@@ -19,11 +21,16 @@ def app_factory():
 
     @app.route('/')
     def get_root():
-        return jsonify({'test': 'test'})
+        links = []
+        for rule in app.url_map.iter_rules():
+            methods = ','.join(rule.methods)
+            links.append((f'{rule}', methods, rule.endpoint))
+        return jsonify(links)
 
     @app.route('/cert', methods=['GET'])
     def get_cert():
-        pass
+        response = send_from_directory(os.path.join('.', 'static'), 'ssr.crt')
+        return response
 
     @app.route('/pair', methods=['GET'])
     def pair_device():

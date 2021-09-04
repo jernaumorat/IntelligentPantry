@@ -36,11 +36,15 @@ def add_item():
 
 @bp.route('/<int:itemID>', methods=['GET'])
 def get_item(itemID):
-    pass
+    item = PantryItem.query.get_or_404(itemID)
+    resp = jsonify(item.to_dict(summary=False))
+
+    return resp
+
 
 @bp.route('/<int:itemID>/img', methods=['GET'])
 def get_item_image(itemID):
-    item = PantryItem.query.get(itemID)
+    item = PantryItem.query.get_or_404(itemID)
     image = item.item_image
     
     resp = make_response(image)
@@ -51,10 +55,10 @@ def get_item_image(itemID):
 
 @bp.route('/<int:itemID>', methods=['DELETE'])
 def delete_item(itemID):
-    item = PantryItem.query.get(itemID)
+    item = PantryItem.query.get_or_404(itemID)
     db.session.delete(item)
     db.session.commit()
     
     resp = jsonify("OK")
-    
+
     return resp
