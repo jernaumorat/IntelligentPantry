@@ -18,7 +18,6 @@ def app_factory():
     migrate = Migrate(app, db)
 
     @app.route('/')
-    @token_auth.login_required
     def get_root():
         return jsonify({'test': 'test'})
 

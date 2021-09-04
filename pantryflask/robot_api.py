@@ -20,10 +20,6 @@ def add_preset():
 def call_preset(presetID):
     pass
 
-@bp.route('/presets/<int:presetID>', methods=['PUT'])
-def update_preset(presetID):
-    pass
-
 @bp.route('/presets/<int:presetID>', methods=['DELETE'])
 def delete_preset(presetID):
     pass
@@ -32,16 +28,13 @@ def delete_preset(presetID):
 def call_position():
     pass
 
-@bp.route('/control/<string:direction>', methods=['POST'])
-def call_direction(direction):
-    pass
-
 @bp.route('/camera', methods=['GET'])
 def get_image():
     response = send_from_directory(os.path.join('.', 'static'), 'camera.jpg')
     response.headers.set('Cache-Control', 'max-age=86400')
+    response.headers.remove('Content-Disposition')
+    response.headers.remove('Last-Modified')
     return response
-
 
 @bp.route('/camera', methods=['POST'])
 def put_image():

@@ -10,11 +10,10 @@ All Endpoints
 | `/pantry/[itemID]`            | GET               |
 | `/robot/presets/`             | GET, POST         |
 | `/robot/presets/[presetID]`   | POST, DELETE      |
-| `/robot/control/`             | POST              |
-| `/robot/control/up`           | POST              |
-| `/robot/control/right`        | POST              |
-| `/robot/control/down`         | POST              |
-| `/robot/control/left`         | POST              |
+| `/robot/control`              | POST              |
+| `/robot/camera`		| GET, POST	    |
+| `/robot/status`		| GET		    |
+| `/robot/scan`			| POST		    |
 
 Endpoint Description
 ====================
@@ -34,11 +33,15 @@ The `/pantry/` endpoint responds to GET and POST requests. GET requests return a
 
 `/pantry/[itemID]` GET requests return item detail: including title, image, and quantity; PUT requests update any data of the item; and DELETE requests set the quantity of the item to 0.
 
-## `/robot/presets/`, `/robot/control/`
+## `/robot/`
 `/presets/` GET requests will return a list of all camera position presets (titles and positions); POST requests will allow creating a new preset with `title` and `position` parameters (`parameter` must be in the form `(x,y)`).
 
 `/presets/[presetID]` POST requests will recall the preset position, sending a command to the camera robot to move to the given position. DELETE requests will remove the preset from the database.
 
-`/control/` requests will take a `position` parameter, and send a move command to the given position.
+`/control` requests will take `x` and `y` parameters, integers in the range 0 - 100, and send a move command to the given position.
 
-`/control/[direction]` POST requests can take a `magnitude` parameter, and will move the camera that many units in the given direction.
+`/camera` GET requests will return the server's latest image from the robot. POST requests (from the robot) will update this image.
+
+`/status` GET requests will return the current state of the robot system, from 'idle', 'processing' and 'scanning'. The request triggers a corresponding server -> robot request, so while results will be accurate, time of return is unknown.
+
+`/scan` POST requests will trigger a server -> robot request to begin a scanning pass. The request returns no results.
