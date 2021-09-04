@@ -4,7 +4,7 @@ from markupsafe import escape
 from json import loads
 
 from pantryflask.db import db
-from pantryflask.models import PantryAudit, PantryItem
+from pantryflask.models import PantryItem
 
 bp = Blueprint('pantry', __name__, url_prefix='/pantry')
 
@@ -12,7 +12,7 @@ bp = Blueprint('pantry', __name__, url_prefix='/pantry')
 def get_allitems():
     data = []
     for item in PantryItem.query.all():
-        data.append(item.to_dict())
+        data.append(item.to_dict(summary=True))
     
     resp = jsonify(data)
     if data == []:
@@ -29,7 +29,7 @@ def add_item():
     db.session.add(new_item)
     db.session.commit()
 
-    resp = jsonify(new_item.to_dict())
+    resp = jsonify(new_item.to_dict(summary=False))
     resp.headers.set('Location', f'{request.base_url}{new_item.item_id}')
     
     return resp, 201

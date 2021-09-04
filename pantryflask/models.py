@@ -11,38 +11,19 @@ class PantryItem(db.Model):
     item_label = db.Column(db.String, index=True, nullable=False)
     item_image = db.Column(db.LargeBinary)
     item_quantity = db.Column(db.Integer, index=True, nullable=False)
+    item_x = db.Column(db.Integer, default=0, nullable=False)
+    item_y = db.Column(db.Integer, default=0, nullable=False)
 
-    def to_dict(self):
+    def to_dict(self, summary):
         data = {
             'id': self.item_id,
             'label': self.item_label,
             'quantity': self.item_quantity
         }
+        if not summary:
+            data['x'] = self.item_x
+            data['y'] = self.item_y
 
-        return data
-
-class PantryAudit(db.Model):
-    reciept_id = db.Column(db.Integer, primary_key=True)
-    reciept_time = db.Column(db.DateTime, index=True, default=datetime.now(), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey('pantry_item.item_id'))
-    label_old = db.Column(db.String)
-    label_new = db.Column(db.String)
-    image_old = db.Column(db.LargeBinary)
-    image_new = db.Column(db.LargeBinary)
-    quant_old = db.Column(db.Integer)
-    quant_new = db.Column(db.Integer)
-
-    def to_dict(self):
-        data = {
-            'recieptId': self.reciept_id,
-            'recieptTime': self.reciept_time,
-            'itemId': self.item_id,
-            'labelOld': self.label_old,
-            'labelNew': self.label_new,
-            'quantityOld': self.quant_old,
-            'quantityNew': self. quant_new
-        }
-        
         return data
 
 class RobotPreset(db.Model):
@@ -84,6 +65,18 @@ class AuthToken(db.Model):
             'id': self.token_id,
             'token': self.token_data,
             'tokBirth': self.token_birth
+        }
+
+        return data
+
+class SystemStatus(db.Model):
+    status_time = db.Column(db.DateTime, primary_key=True)
+    status_state = db.Column(db.String, nullable=False)
+
+    def to_dict(self):
+        data = {
+            'time': self.status_time,
+            'state': self.status_state
         }
 
         return data
