@@ -49,7 +49,6 @@ const wait = (timeout: number): Promise<number> => {
 /* Retrieves json from url, and formats the response to the PItem interface.
    NOT currently robust, needs reworking. */
 const pitems_from_api = async (url: string): Promise<PItem[]> => {
-  console.log(url)
   const res = await fetch(url);
   const data = await res.json();
 
@@ -70,12 +69,11 @@ const PantryScreen = ({ navigation }: any): JSX.Element => {
 
   // TODO: move all light/dark mode to context
   const isDarkMode = useColorScheme() === 'dark';
-
-  const apiUrl = 'http://192.168.0.248:5000/pantry/knownitems/';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const apiUrl = 'http://192.168.0.248:5000/pantry/knownitems/';
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
