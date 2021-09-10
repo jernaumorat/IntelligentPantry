@@ -12,9 +12,10 @@ from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
 from pantryflask.util import bp as util_bp
 
-def app_factory():
+def app_factory(config={}):
     app = Flask(__name__)
-    app.config.from_object(FlaskConfig)
+    
+    app.config.from_object(FlaskConfig) if config == {} else app.config.from_object(config)
 
     db.init_app(app)
     migrate = Migrate(app, db)
