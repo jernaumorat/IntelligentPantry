@@ -6,7 +6,7 @@ TODO
   - [ ] Create first-run flow, pairing and configuring server
   - [ ] Set up persistant on-device k/v store for settings and cache
   - [ ] Make dev-mode features disablable
-  - [ ] Light/dark mode stylesheets, and app-wide stylesheets (Bonita)
+  - [ ] Light/dark mode stylesheets, and app-wide stylesheets (Bonita-working)
   - [ ] General and robust networking singleton
     - [ ] set up mDNS
     - [ ] Allow mDNS override in settings
