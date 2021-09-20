@@ -1,20 +1,40 @@
-from flask import Blueprint, jsonify, make_response
+from flask import Blueprint, jsonify, request, make_response
 from flask.helpers import send_from_directory
 
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 import os
 from pantryflask.db import db
+from pantryflask.models import RobotPreset
+from json import loads
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
 @bp.route('/presets', methods=['GET'])
 def get_presets():
-    pass
+    data = []
+    for item in RobotPreset.query.all():
+        data.append(item.to_dict())
+    
+    resp = jsonify(data)
+    if data == []:
+        return resp, 204
+    
+    return resp
+    
 
 @bp.route('/presets', methods=['POST'])
 def add_preset():
-    pass
+    payload = loads(request.form.get('payload'))
+    new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])
+
+    db.session.add(new_item)
+    db.session.commit()
+
+    resp = jsonify(new_item.to_dict())
+    resp.headers.set('Location', f'{request.base_url}{new_item.preset_id}')
+    
+    return resp, 201
 
 @bp.route('/presets/<int:presetID>', methods=['POST'])
 def call_preset(presetID):
