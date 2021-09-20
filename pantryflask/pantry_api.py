@@ -24,7 +24,7 @@ def get_allitems():
 def add_item():
     payload = loads(request.form.get('payload'))
     img = request.files['image'] or None
-    new_item = PantryItem(item_label=payload['label'], item_quantity=payload['quantity'], item_image=img.read())
+    new_item = PantryItem(item_label=payload['label'], item_quantity=payload['quantity'], item_x=payload['item_x'], item_y=payload['item_y'], item_image=img.read())
 
     db.session.add(new_item)
     db.session.commit()
