@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 
 import {
   StyleSheet,
@@ -20,7 +20,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
-  NavigationContainer,
+NavigationContainer, DarkTheme,DefaultTheme
 } from '@react-navigation/native';
 
 import {
@@ -36,7 +36,8 @@ import { RobotScreen } from './RobotScreen'
 import PantryScreen from './PantryScreen'
 import PantryDetail from './PantryDetail'
 import { SettingsScreen } from './SettingsScreen'
-
+import {useTheme} from './theme/ThemeProvider';
+import { EventRegister } from 'react-native-event-listeners'
 const Tab = createBottomTabNavigator();
 
 const PantryStack = createNativeStackNavigator();
@@ -50,7 +51,21 @@ const PantryStackScreen = (props: any): JSX.Element => {
   )
 }
 
-const App = (): JSX.Element => {
+const App = (): JSX.Element => { 
+  const [darkApp, setDarkApp] = useState(false);
+  const appTheme = darkApp? DarkTheme:DefaultTheme;
+  useEffect(()=>
+  {
+    let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
+      setDarkApp(data);
+  }
+  );
+  return ()=>{
+    true;
+  };
+
+  },[]
+  );
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -62,7 +77,7 @@ const App = (): JSX.Element => {
 
   // TODO: fix url passing
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={ appTheme }>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
