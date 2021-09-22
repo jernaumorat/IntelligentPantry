@@ -7,21 +7,21 @@ TODO
   - [ ] Set up persistant on-device k/v store for settings and cache (Nathan)
   - [ ] Make dev-mode features disablable
   - [ ] Light/dark mode stylesheets, and app-wide stylesheets (Bonita)
-  - [ ] General and robust networking singleton (Nathan)
-    - [ ] set up mDNS
-    - [ ] Allow mDNS override in settings
+  - [X] General and robust networking singleton (Nathan)
+    - [ ] set up mDNS (Nathan and Blake)
+    - [ ] Allow mDNS override in settings (Nathan)
   - [ ] Work out production build process
 - PantryScreen:
   - [ ] Search (Bonita)
   - [ ] Alphabetical sectioning (Bonita)
   - [ ] Sort by alpha/quantity  (Bonita)
-  - [ ] Get detail from server for PantryDetail
+  - [X] Get detail from server for PantryDetail
 - RobotScreen:
   - [ ] Style up X/Y and buttons a little more clearly (Bonita)
-  - [ ] Add server population and recall to presets
-    - [ ] Remove presets on long-press
-  - [ ] And API call to x/y buttons
-  - [ ] Directional buttons to modify x/y states (Bonita)
+  - [X] Add server population and recall to presets
+    - [ ] Remove presets on long-press (Nathan)
+  - [X] And API call to x/y buttons
+  - [X] Directional buttons to modify x/y states (Bonita)
 - SettingsScreen:
   - [ ] Style as native-looking sectionview
   - [ ] Add pairing functionality
