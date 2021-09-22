@@ -9,11 +9,8 @@ from PyBot import PyBot
 pygame.init()
 
 active = True
-minsize = 20
-maxsize = 50
 
-
-bot = PyBot(100, 100, minsize)
+bot = PyBot(100, 100)
 bot.draw()
 print ("a = left\nd = right\nw = up\ns = down\nq or e = tilt\nr or f = forward/back")
 while active:
@@ -30,13 +27,16 @@ while active:
             if event.key == pygame.K_d:
                     bot.right()
 
-            if event.key == pygame.K_e:         # tilt up       tilt down
-                    bot.tiltUp()
-            if event.key == pygame.K_q:
-                    bot.tiltDown()
+            # if event.key == pygame.K_e:         # tilt up       tilt down
+            #         bot.tiltUp()
+            # if event.key == pygame.K_q:
+            #         bot.tiltDown()
 
-            if event.key == pygame.K_r:         # Forward       Back
-                    bot.forward()
-            if event.key == pygame.K_f:
-                    bot.back()
+            # if event.key == pygame.K_r:         # Forward       Back
+            #         bot.forward()
+            # if event.key == pygame.K_f:
+            #         bot.back()
+
             bot.draw()
+
+# Todo  create a Main function to initialise bot and run the flask server 
