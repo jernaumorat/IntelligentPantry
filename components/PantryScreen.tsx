@@ -60,7 +60,7 @@ const pitems_from_api = async (url: string): Promise<PItem[]> => {
   return data
 }
 
-const PantryScreen = ({ navigation }: any): JSX.Element => {
+export const PantryScreen = ({ navigation }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
@@ -130,5 +130,3 @@ const PantryItem = (props: any): JSX.Element => {
     </TouchableOpacity>
   );
 };
-
-export default PantryScreen;
