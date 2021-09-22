@@ -73,7 +73,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const apiUrl = 'http://192.168.0.248:5000/pantry/knownitems/';
+  const apiUrl = 'http://192.168.0.248:5000/pantry/';
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
