@@ -33,9 +33,9 @@ import {
 import {
     Picker
 } from '@react-native-picker/picker';
-import { RobotPreset } from './components/RobotPresets';
-import { RobotControls } from './components/RobotControl';
-import { RobotCoordinate } from './components/RobotCoordinate';
+import { RobotPreset } from './RobotPresets';
+import { RobotControls } from './RobotControl';
+import { RobotCoordinate } from './RobotCoordinate';
 
 export const RobotScreen = (props: any): JSX.Element => {
     const [xPos, setxPos] = useState('0')
