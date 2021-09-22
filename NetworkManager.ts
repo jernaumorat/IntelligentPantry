@@ -12,9 +12,11 @@ export interface PItem {
 }
 
 export interface Preset {
-    id: number,
-    name: string,
-    coords: Coords
+    presetId: number,
+    label: string,
+    coords: Coords,
+    presetX: string | null,
+    presetY: string | null
 }
 
 export interface Status {
@@ -67,6 +69,10 @@ export const NetworkManager = () => {
                 const res = await fetch(url + '/robot/presets');
                 presets = await res.json();
 
+                for (let item of presets) {
+                    item.coords = { x: Number(item.presetX), y: Number(item.presetY) }
+                }
+
                 return presets;
             },
             getStatus: async () => {
@@ -80,7 +86,6 @@ export const NetworkManager = () => {
             postCoords: async (coords: Coords) => {
                 const res = await fetch(url + '/robot/control', {
                     method: 'POST',
-                    headers: { 'Content-Type:': 'application/json' },
                     body: JSON.stringify({ x: coords.x, y: coords.y })
                 });
                 return res.status === 200;
