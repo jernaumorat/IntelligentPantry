@@ -48,7 +48,7 @@ const pdStyles = StyleSheet.create({
     }
 })
 
-const PantryDetail = ({ route, navigation }: any): JSX.Element => {
+export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     const getURI = (id: number): string => {
         return 'http://192.168.0.248:5000/pantry/knownitems/' + id + '/img'
     }
@@ -83,5 +83,3 @@ const PantryDetail = ({ route, navigation }: any): JSX.Element => {
         </View>
     )
 }
-
-export default PantryDetail;
