@@ -33,6 +33,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { RobotScreen } from './components/RobotScreen'
 import { PantryStackScreen } from './components/PantryStackScreen'
 import { SettingsScreen } from './components/SettingsScreen'
+import { EventRegister } from 'react-native-event-listeners';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,13 +43,27 @@ const App = (): JSX.Element => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // declared variable and state for selected theme 
+  const [darkApp, setDarkApp] = useState(false);
+  //variable to hold current selected theme      according to react native themes section https://reactnavigation.org/docs/themes/
+  const appTheme = darkApp? DarkTheme:DefaultTheme;
+
   useEffect(() => {
+    // listing event emited by switch with value true/flase in switch.tsx
+    let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
+      setDarkApp(data);
+  }
+  );
+  return ()=>{
+    true;
+  };
     SplashScreen.hide()
   }, [])
 
   // TODO: fix url passing
   return (
-    <NavigationContainer theme={ appTheme }>
+                           // applied selected theme in the navigation controller as told in https://reactnavigation.org/docs/themes/
+    <NavigationContainer theme={ appTheme }>  
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
