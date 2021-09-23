@@ -11,6 +11,7 @@ TODO
     - [ ] set up mDNS (Nathan and Blake)
     - [ ] Allow mDNS override in settings (Nathan)
   - [ ] Work out production build process
+  - [ ] Replace all `props: any` with prop types or objects.
 - PantryScreen:
   - [ ] Search (Bonita)
   - [ ] Alphabetical sectioning (Bonita)
@@ -19,7 +20,7 @@ TODO
 - RobotScreen:
   - [ ] Style up X/Y and buttons a little more clearly (Bonita)
   - [X] Add server population and recall to presets
-    - [ ] Remove presets on long-press (Nathan)
+    - [X] Remove presets on long-press (Nathan)
   - [X] And API call to x/y buttons
   - [X] Directional buttons to modify x/y states (Bonita)
 - SettingsScreen:
