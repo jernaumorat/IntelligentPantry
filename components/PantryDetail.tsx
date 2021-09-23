@@ -10,7 +10,7 @@ import {
     Image,
 } from 'react-native';
 
-import { NetworkManager, PItem } from '../NetworkManager';
+import { NetworkManager, PDetail, PItem } from '../NetworkManager';
 
 const pdStyles = StyleSheet.create({
     TableRow: {
@@ -39,7 +39,7 @@ const pdStyles = StyleSheet.create({
 
 
 export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
-    const [detailState, setDetailState] = useState<PItem>();
+    const [detailState, setDetailState] = useState<PDetail>();
 
     const { id } = route.params;
 
@@ -47,7 +47,7 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     const imgurl = nm.url + '/pantry/' + id + '/img'
 
     const update_state = async () => {
-        const pdetail: PItem = await nm.getPantryDetail(id);
+        const pdetail: PDetail = await nm.getPantryDetail(id);
         setDetailState(pdetail);
     }
 
@@ -71,10 +71,10 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
                     <Text style={[pdStyles.DetailHeader]}>Quantity</Text>
                     <Text style={[pdStyles.DetailItem]}>{detailState?.quantity}</Text>
                 </View>
-                {/* <View style={[pdStyles.TableRow]}>
+                <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Location</Text>
-                    <Text style={[pdStyles.DetailItem]}>({detailState?.coords.x || 0}, {detailState?.coords.y})</Text>
-                </View> */}
+                    <Text style={[pdStyles.DetailItem]}>({detailState?.coords.x}, {detailState?.coords.y})</Text>
+                </View>
             </View>
         </View>
     )
