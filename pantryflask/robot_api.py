@@ -36,17 +36,25 @@ def add_preset():
     
     return resp, 201
 
-@bp.route('/presets/<int:presetID>', methods=['POST'])
-def call_preset(presetID):
-    pass
-
 @bp.route('/presets/<int:presetID>', methods=['DELETE'])
 def delete_preset(presetID):
-    pass
+    item = RobotPreset.query.get_or_404(presetID)
+
+    db.session.delete(item)
+    db.session.commit()
+
+    resp = jsonify('OK')
+
+    return resp
 
 @bp.route('/control', methods=['POST'])
 def call_position():
-    pass
+    payload = request.get_json()
+    print(payload['x'], payload['y'])
+    
+    resp = jsonify(payload)
+    
+    return resp
 
 @bp.route('/camera', methods=['GET'])
 def get_image():

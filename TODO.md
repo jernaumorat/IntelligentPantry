@@ -5,10 +5,9 @@ TODO
 - [ ] Robust image handling
 - [ ] Fill out remaining API endpoints
   - [ ] `/robot/presets` GET
-  - [ ] `/robot/presets` POST
-  - [ ] `/robot/presets/<presetid>` POST
-  - [ ] `/robot/presets/<presetid>` DELETE
-  - [ ] `/robot/control` POST
+  - [X] `/robot/presets` POST
+  - [X] `/robot/presets/<presetid>` DELETE
+  - [X] `/robot/control` POST (stub until robot ready)
   - [ ] `/robot/camera` POST
   - [ ] `/pantry/` POST (update to handle bulk data)
   - [ ] `/pantry` DELETE
