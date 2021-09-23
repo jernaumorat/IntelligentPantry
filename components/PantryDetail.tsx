@@ -4,24 +4,13 @@ import React, {
 } from 'react';
 
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
-    useColorScheme,
     View,
-    KeyboardAvoidingView,
     Image,
-    RefreshControl,
-    Button,
-    TextInput,
-    TouchableWithoutFeedback,
-    Keyboard,
-    Pressable,
-    TouchableHighlight,
-    TouchableOpacity,
 } from 'react-native';
+
+import { NetworkManager, PDetail, PItem } from '../NetworkManager';
 
 const pdStyles = StyleSheet.create({
     TableRow: {
@@ -48,36 +37,43 @@ const pdStyles = StyleSheet.create({
     }
 })
 
+
 export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
-    const getURI = (id: number): string => {
-        return 'http://192.168.0.248:5000/pantry/' + id + '/img'
-    }
+    const [detailState, setDetailState] = useState<PDetail>();
 
     const { id } = route.params;
 
+    let nm = NetworkManager().getInstance()
+    const imgurl = nm.url + '/pantry/' + id + '/img'
+
+    const update_state = async () => {
+        const pdetail: PDetail = await nm.getPantryDetail(id);
+        setDetailState(pdetail);
+    }
+
+    useEffect(() => {
+        update_state()
+    }, [])
+
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
-            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: getURI(id) }} />
+            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: imgurl }} />
             <View style={{ flex: 5, flexDirection: 'column' }}>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Item ID</Text>
-                    <Text style={[pdStyles.DetailItem]}>1234</Text>
+                    <Text style={[pdStyles.DetailItem]}>{detailState?.id}</Text>
                 </View>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Item Name</Text>
-                    <Text style={[pdStyles.DetailItem]}>Ambrosia</Text>
+                    <Text style={[pdStyles.DetailItem]}>{detailState?.label}</Text>
                 </View>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Quantity</Text>
-                    <Text style={[pdStyles.DetailItem]}>88</Text>
-                </View>
-                <View style={[pdStyles.TableRow]}>
-                    <Text style={[pdStyles.DetailHeader]}>Date/time recorded</Text>
-                    <Text style={[pdStyles.DetailItem]}>01/01/2022 24:61</Text>
+                    <Text style={[pdStyles.DetailItem]}>{detailState?.quantity}</Text>
                 </View>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Location</Text>
-                    <Text style={[pdStyles.DetailItem]}>(51, 49)</Text>
+                    <Text style={[pdStyles.DetailItem]}>({detailState?.coords.x}, {detailState?.coords.y})</Text>
                 </View>
             </View>
         </View>

@@ -22,12 +22,7 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
-interface PItem {
-  id: number,
-  uri: string,
-  label: string,
-  quantity: number
-}
+import { NetworkManager, PItem } from '../NetworkManager'
 
 const PantryStyles = StyleSheet.create({
   pantryItem: {
@@ -46,20 +41,6 @@ const wait = (timeout: number): Promise<number> => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-/* Retrieves json from url, and formats the response to the PItem interface.
-   NOT currently robust, needs reworking. */
-const pitems_from_api = async (url: string): Promise<PItem[]> => {
-  const res = await fetch(url);
-  const data = await res.json();
-
-  // TODO: This is brittle, should be generalised
-  for (let item of data) {
-    item.uri = url + item.id.toString() + '/img'
-  }
-
-  return data
-}
-
 export const PantryScreen = ({ navigation }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
@@ -72,8 +53,6 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
-  const apiUrl = 'http://192.168.0.248:5000/pantry/';
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
@@ -89,9 +68,10 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 
   const update_state = async (): Promise<void> => {
     setRefreshing(true)
-    const data = await pitems_from_api(apiUrl)
+    let nm = NetworkManager().getInstance()
+    const data = await nm.getPantryItems()
     setpState(data)
-    wait(1000).then(() => { setRefreshing(false) })
+    await wait(1000).then(() => { setRefreshing(false) })
   }
 
   const pItem_components = pState ? components_from_pitems(pState) : []
