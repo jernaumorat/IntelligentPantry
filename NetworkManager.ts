@@ -1,3 +1,5 @@
+import { PresetCreateDialog } from "./components/RobotPresets";
+
 export interface Coords {
     x: number,
     y: number
@@ -8,15 +10,20 @@ export interface PItem {
     uri: string,
     label: string,
     quantity: number,
-    coords: Coords | null
+}
+
+export interface PDetail extends PItem {
+    x: number,
+    y: number,
+    coords: Coords
 }
 
 export interface Preset {
     presetId: number,
     label: string,
     coords: Coords,
-    presetX: string | null,
-    presetY: string | null
+    presetX: number | null,
+    presetY: number | null
 }
 
 export interface Status {
@@ -28,12 +35,15 @@ interface NM {
     url: string,
 
     getPantryItems(): Promise<PItem[]>,
-    getPantryDetail(id: number): Promise<PItem>,
+    getPantryDetail(id: number): Promise<PDetail>,
     getPresets(): Promise<Preset[]>,
     getStatus(): Promise<Status>,
 
+    postPreset(preset: Preset): Promise<Preset | null>,
     postCoords(coords: Coords): Promise<boolean>,
-    postScan(): Promise<boolean>
+    postScan(): Promise<boolean>,
+
+    deletePreset(preset: Preset): Promise<boolean>
 }
 
 export const NetworkManager = () => {
@@ -56,10 +66,11 @@ export const NetworkManager = () => {
                 return pitems;
             },
             getPantryDetail: async (id: number) => {
-                let pitem: PItem;
+                let pitem: PDetail;
 
                 const res = await fetch(url + '/pantry/' + id);
                 pitem = await res.json();
+                pitem.coords = { x: pitem.x, y: pitem.y }
 
                 return pitem;
             },
@@ -83,9 +94,31 @@ export const NetworkManager = () => {
 
                 return status;
             },
+            postPreset: async (preset: Preset) => {
+                const res = await fetch(url + '/robot/presets', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ label: preset.label, preset_x: preset.coords.x, preset_y: preset.coords.y })
+                })
+
+                if (res.status === 201) {
+                    let ret: Preset = await res.json()
+                    ret.coords = { x: Number(ret.presetX), y: Number(ret.presetY) }
+                    return ret
+                } else {
+                    return null
+                }
+            },
             postCoords: async (coords: Coords) => {
                 const res = await fetch(url + '/robot/control', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ x: coords.x, y: coords.y })
                 });
                 return res.status === 200;
@@ -94,6 +127,17 @@ export const NetworkManager = () => {
                 const res = await fetch(url + '/robot/scan', {
                     method: 'POST'
                 });
+                return res.status === 200;
+            },
+            deletePreset: async (preset: Preset) => {
+                const res = await fetch(url + '/robot/presets/' + preset.presetId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+
                 return res.status === 200;
             }
         }
