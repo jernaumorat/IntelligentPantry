@@ -25,9 +25,8 @@ def get_presets():
 
 @bp.route('/presets', methods=['POST'])
 def add_preset():
-    payload = loads(request.form.get('payload'))
-    new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])
-
+    payload = request.get_json()
+    new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])    
     db.session.add(new_item)
     db.session.commit()
 
