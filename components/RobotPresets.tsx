@@ -81,6 +81,7 @@ export const RobotPreset = (props: any): JSX.Element => {
             let pL = presetList
             pL = pL.filter(item => { return item !== pre })
             setPresetList(pL)
+            update_state()
         }
     }
 
