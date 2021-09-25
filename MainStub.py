@@ -1,9 +1,8 @@
 import pygame
-import time
 from flask import Blueprint, jsonify, request, make_response
+from flask.helpers import send_from_directory
 from json import loads
 from flask import Flask
-from Bot import Bot
 global BLUE, BLACK
 
 from PyBot import PyBot
@@ -20,8 +19,15 @@ def index():
     bot.moveTo(int(x), int(payload['y']))
     return "",200
 
+@app.route('/camera',methods=['GET'])
+def get_image():
+    bot.getImage()
+    resp = send_from_directory('./', 'temp_img.jpg')
+    # resp = make_response(image.load(),200)    
+    resp.headers.set('Content-Type', 'image/jpeg')
+    return resp
 
 if __name__ == "__main__":        
     pygame.init()
-    bot = PyBot(100, 100)
+    bot = PyBot(0, 0)
     app.run()
