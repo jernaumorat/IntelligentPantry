@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask.helpers import send_from_directory
-
+import requests
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 import os
@@ -50,14 +50,15 @@ def delete_preset(presetID):
 def call_position():
     payload = request.get_json()
     print(payload['x'], payload['y'])
+    url ='http://127.0.0.1:5050/moveTo'
+    response = requests.post(url,json=payload)
     
-    resp = jsonify(payload)
-    
-    return resp
+    return response.text
 
 @bp.route('/camera', methods=['GET'])
 def get_image():
-    response = send_from_directory(os.path.join('.', 'static'), 'camera.jpg')
+    response = send_from_directory(os.path.join('../'), 'camera.jpg')    
+    response.headers.set('Content-Type', 'image/jpeg')
     response.headers.set('Cache-Control', 'max-age=86400')
     response.headers.remove('Content-Disposition')
     response.headers.remove('Last-Modified')
@@ -65,4 +66,7 @@ def get_image():
 
 @bp.route('/camera', methods=['POST'])
 def put_image():
-    pass
+    img_file = request.files['image']
+    img_file.save('camera.jpg')
+    resp = jsonify('OK')
+    return resp
