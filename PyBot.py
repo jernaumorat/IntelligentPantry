@@ -1,8 +1,8 @@
-import pygame
 import math
 import time
 from PIL import Image
 from Bot import Bot
+import requests
 # Default values
 
 width =1200
@@ -11,29 +11,16 @@ BLUE =      (0,   0, 255)
 BLACK =      (0,   0, 0)
 class PyBot(Bot):   
     VIEW_WIDTH  = 600
-    VIEW_HIEGHT = 800    
+    VIEW_HIEGHT = 400    
     def __init__(self, x, y):
-        self.win = pygame.display.set_mode((width, height))
         self.x = x
         self.y = y
-        self.radius = 20
-        self.draw()
      
     def moveTo(self , x , y):
-        self.erase()
         self.x = x
         self.y = y  
-        self.draw()
-        return 
-
-    def draw(self):
-        pygame.draw.circle(self.win, BLUE, (self.x,self.y),self.radius,2)
-        pygame.display.update()
-        # small pause to ensure window is updated
-        time.sleep(1)
-
-    def erase(self):
-        pygame.draw.circle(self.win, BLACK, (self.x,self.y),self.radius,2)
+        # should send Image and this should send an image off to the server
+        return
 
     # x and y are 0-100 meaning % of total width/hieght
     def getImage(self):
@@ -48,8 +35,18 @@ class PyBot(Bot):
         offset_y = (img_hieght - self.VIEW_HIEGHT) /100 * self.y
         cropped_img = img.crop((offset_x,offset_y,offset_x + self.VIEW_WIDTH, offset_y + self.VIEW_HIEGHT))        
         img.close()
-        cropped_img.save("temp_img.jpg")
-        return
+        cropped_img.save("camera.jpg")
+        
+        files = {'image': open('./camera.jpg', 'rb')}
+        # headers = {
+        #     'authorization': "Bearer {token}"
+        # }
+        # response = requests.request("POST", url, files=files, headers=headers)
+        # Need to move this hard coded address out into a env_var file
+        response = requests.post('http://192.168.1.17:5000/robot/camera', files=files)
+
+        print(response.text)
+        return "200"
     
     # Todo scan pantry    
     def scan(self):
