@@ -59,7 +59,7 @@ def call_position():
 def get_image():
     response = send_from_directory(os.path.join('../'), 'camera.jpg')    
     response.headers.set('Content-Type', 'image/jpeg')
-    response.headers.set('Cache-Control', 'max-age=86400')
+    response.headers.set('Cache-Control', 'max-age=0')
     response.headers.remove('Content-Disposition')
     response.headers.remove('Last-Modified')
     return response
