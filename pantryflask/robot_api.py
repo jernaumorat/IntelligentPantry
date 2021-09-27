@@ -70,4 +70,4 @@ def put_image():
     img_file.save('camera.jpg')
     resp = jsonify('OK')
     return resp
-    pass
+    
