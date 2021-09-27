@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 
 import { NetworkManager, PDetail, PItem } from '../NetworkManager';
+import { useTheme } from '@react-navigation/native';
 
-const pdStyles = StyleSheet.create({
+const makeStyles = (colors: any) => StyleSheet.create({
     TableRow: {
         flex: 1,
         flexDirection: 'row',
@@ -26,14 +27,16 @@ const pdStyles = StyleSheet.create({
         fontSize: 22,
         textAlign: 'right',
         textAlignVertical: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color:colors.text,
     },
     DetailItem: {
         flex: 3,
         margin: 5,
         padding: 5,
         fontSize: 22,
-        textAlign: 'left'
+        textAlign: 'left',
+        color:colors.text,
     }
 })
 
@@ -54,7 +57,8 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
-
+    const { colors } = useTheme();
+    const pdStyles = makeStyles(colors)
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
             <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: imgurl }} />

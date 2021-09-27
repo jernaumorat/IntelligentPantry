@@ -20,6 +20,7 @@ Dialog
     from 'react-native-dialog';
 
 import { NetworkManager, Preset } from '../NetworkManager';
+import { useTheme } from '@react-navigation/native';
 
 export const PresetDeleteDialog = (props: any): JSX.Element => {
     return (
@@ -109,7 +110,8 @@ export const RobotPreset = (props: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
-
+    const { colors } = useTheme();
+    const style = makeStyles(colors)
     return (<>
         <PresetDeleteDialog
             visible={deleteVis}
@@ -125,7 +127,9 @@ export const RobotPreset = (props: any): JSX.Element => {
         />
         <View style={{ flex: 2, flexDirection: 'row' }}>
             <View style={[style.pickerView, { flex: 7 }]}>
-                <Picker selectedValue={selected} onValueChange={itemVal => {
+                <Picker style={style.pickerStyle}
+                
+                selectedValue={selected} onValueChange={itemVal => {
                     setSelected(itemVal)
                     setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
                 }}>
@@ -141,9 +145,25 @@ export const RobotPreset = (props: any): JSX.Element => {
     </>);
 }
 
-const style = StyleSheet.create({
+const makeStyles = (colors: any) =>  StyleSheet.create({
     pickerView: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-    }
+        
+        borderColor: colors.text,
+        borderBottomWidth:1,
+        width: 300,
+        marginTop: 15,
+        marginLeft:20,
+        marginRight:20,
+        borderRadius: 10,
+        alignSelf: 'center',
+
+
+   },
+    pickerStyle:{   
+        width: "100%",
+  
+       
+    }  
 });

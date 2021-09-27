@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect,useState } from 'react';
+import React, { useEffect ,useState} from 'react';
 
 import {
   StyleSheet,
@@ -20,7 +20,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
-NavigationContainer, DarkTheme,DefaultTheme
+  NavigationContainer,DarkTheme,DefaultTheme
 } from '@react-navigation/native';
 
 import {
@@ -33,20 +33,16 @@ import SplashScreen from 'react-native-splash-screen';
 import { RobotScreen } from './components/RobotScreen'
 import { PantryStackScreen } from './components/PantryStackScreen'
 import { SettingsScreen } from './components/SettingsScreen'
-import { EventRegister } from 'react-native-event-listeners';
-
+import { EventRegister } from 'react-native-event-listeners'
 const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [darkApp, setDarkApp] = useState(false);
+  const appTheme = darkApp == true ? DarkTheme : DefaultTheme;
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
-  // declared variable and state for selected theme 
-  const [darkApp, setDarkApp] = useState(false);
-  //variable to hold current selected theme      according to react native themes section https://reactnavigation.org/docs/themes/
-  const appTheme = darkApp? DarkTheme:DefaultTheme;
 
   useEffect(() => {
     // listing event emited by switch with value true/flase in switch.tsx
@@ -58,12 +54,12 @@ const App = (): JSX.Element => {
     true;
   };
     SplashScreen.hide()
+    
   }, [])
 
   // TODO: fix url passing
   return (
-                           // applied selected theme in the navigation controller as told in https://reactnavigation.org/docs/themes/
-    <NavigationContainer theme={ appTheme }>  
+    <NavigationContainer theme={appTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
