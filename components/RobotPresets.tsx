@@ -58,13 +58,13 @@ export const RobotPreset = (props: any): JSX.Element => {
     const [createVis, setCreateVis] = useState(false)
     const coordState = props.coords
     const setCoordState = props.setCoords
-
+    const { colors } = useTheme();
     let nm = NetworkManager().getInstance()
 
     const components_from_presets = (data: Preset[]): JSX.Element[] => {
         const final = []
         for (let preset of data) {
-            final.push(<Picker.Item key={preset.presetId} label={preset.label} value={preset.presetId} />)
+            final.push(<Picker.Item key={preset.presetId} color ={colors.text}  label={preset.label} value={preset.presetId} />)
         }
 
         return final
@@ -110,7 +110,7 @@ export const RobotPreset = (props: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
-    const { colors } = useTheme();
+    
     const style = makeStyles(colors)
     return (<>
         <PresetDeleteDialog
