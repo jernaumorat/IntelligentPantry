@@ -29,7 +29,7 @@ export const PresetDeleteDialog = (props: any): JSX.Element => {
                 <Dialog.Title>Delete Preset</Dialog.Title>
                 <Dialog.Description>Are you sure you want to delete the preset {props.presetLabel}?</Dialog.Description>
                 <Dialog.Button label='Cancel' onPress={props.handleCancel} />
-                <Dialog.Button label='Delete' onPress={props.handleDelete} color={PlatformColor('systemRed')} />
+                <Dialog.Button label='Delete' onPress={props.handleDelete} color='#ff2020' />
             </Dialog.Container>
         </View>
     )
