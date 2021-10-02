@@ -22,7 +22,6 @@ def index():
     bot.moveTo(int(x), int(y))
     return bot.getImage()
 
-
 # need to replace this and instead of having an endpooint that is call instead  the robot should post an image when it is ready
 # this way the app can all up the 
 @app.route('/camera',methods=['GET'])
