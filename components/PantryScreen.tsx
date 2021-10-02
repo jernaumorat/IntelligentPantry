@@ -18,10 +18,7 @@ import {
 } from 'react-native';
 
 // TODO: remove all NewAppScreen imports, then remove from package deps.
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
+import { useTheme } from '@react-navigation/native';
 import { NetworkManager, PItem } from '../NetworkManager'
 
 const PantryStyles = StyleSheet.create({
@@ -47,11 +44,12 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
   const [pState, setpState] = useState<PItem[]>([])
   const [isRefreshing, setRefreshing] = useState(true)
+  const { colors } = useTheme();
 
   // TODO: move all light/dark mode to context
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: colors.background,
   };
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
