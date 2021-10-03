@@ -35,6 +35,19 @@ def get_image():
     resp.headers.set('Content-Type', 'image/jpeg')
     return resp
 
+@app.route('/scan',methods=['GET'])
+def scan():
+    #set status = busy
+    # maybe use a syncronus call back to pause then send new DB data
+    pass
+
+@app.route('/status',methods=['GET'])
+def get_status():    
+    resp = status
+    resp.headers.set('Content-Type', '')
+    return resp
+
 if __name__ == "__main__":
     bot = PyBot(0, 0)
+    # bot.scan()    #test scan and post items
     app.run(port=5050)
