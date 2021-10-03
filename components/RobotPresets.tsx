@@ -20,6 +20,7 @@ Dialog
     from 'react-native-dialog';
 
 import { NetworkManager, Preset } from '../NetworkManager';
+import { useTheme } from '@react-navigation/native';
 
 export const PresetDeleteDialog = (props: any): JSX.Element => {
     return (
@@ -28,7 +29,7 @@ export const PresetDeleteDialog = (props: any): JSX.Element => {
                 <Dialog.Title>Delete Preset</Dialog.Title>
                 <Dialog.Description>Are you sure you want to delete the preset {props.presetLabel}?</Dialog.Description>
                 <Dialog.Button label='Cancel' onPress={props.handleCancel} />
-                <Dialog.Button label='Delete' onPress={props.handleDelete} color={PlatformColor('systemRed')} />
+                <Dialog.Button label='Delete' onPress={props.handleDelete} color='#ff2020' />
             </Dialog.Container>
         </View>
     )
@@ -57,13 +58,13 @@ export const RobotPreset = (props: any): JSX.Element => {
     const [createVis, setCreateVis] = useState(false)
     const coordState = props.coords
     const setCoordState = props.setCoords
-
+    const { colors } = useTheme();
     let nm = NetworkManager().getInstance()
 
     const components_from_presets = (data: Preset[]): JSX.Element[] => {
         const final = []
         for (let preset of data) {
-            final.push(<Picker.Item key={preset.presetId} label={preset.label} value={preset.presetId} />)
+            final.push(<Picker.Item key={preset.presetId} color ={colors.text}  label={preset.label} value={preset.presetId} />)
         }
 
         return final
@@ -81,6 +82,7 @@ export const RobotPreset = (props: any): JSX.Element => {
             let pL = presetList
             pL = pL.filter(item => { return item !== pre })
             setPresetList(pL)
+            update_state()
         }
     }
 
@@ -108,7 +110,8 @@ export const RobotPreset = (props: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
-
+    
+    const style = makeStyles(colors)
     return (<>
         <PresetDeleteDialog
             visible={deleteVis}
@@ -124,7 +127,9 @@ export const RobotPreset = (props: any): JSX.Element => {
         />
         <View style={{ flex: 2, flexDirection: 'row' }}>
             <View style={[style.pickerView, { flex: 7 }]}>
-                <Picker selectedValue={selected} onValueChange={itemVal => {
+                <Picker style={style.pickerStyle}
+                
+                selectedValue={selected} onValueChange={itemVal => {
                     setSelected(itemVal)
                     setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
                 }}>
@@ -140,9 +145,25 @@ export const RobotPreset = (props: any): JSX.Element => {
     </>);
 }
 
-const style = StyleSheet.create({
+const makeStyles = (colors: any) =>  StyleSheet.create({
     pickerView: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-    }
+        
+        borderColor: colors.text,
+        borderBottomWidth:1,
+        width: 300,
+        marginTop: 15,
+        marginLeft:20,
+        marginRight:20,
+        borderRadius: 10,
+        alignSelf: 'center',
+
+
+   },
+    pickerStyle:{   
+        width: "100%",
+  
+       
+    }  
 });

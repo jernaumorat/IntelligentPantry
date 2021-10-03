@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   StyleSheet,
@@ -20,7 +20,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
-  NavigationContainer,
+  NavigationContainer, DarkTheme, DefaultTheme
 } from '@react-navigation/native';
 
 import {
@@ -33,22 +33,27 @@ import SplashScreen from 'react-native-splash-screen';
 import { RobotScreen } from './components/RobotScreen'
 import { PantryStackScreen } from './components/PantryStackScreen'
 import { SettingsScreen } from './components/SettingsScreen'
-
+import { EventRegister } from 'react-native-event-listeners'
 const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const [darkApp, setDarkApp] = useState(isDarkMode);
+  const appTheme = darkApp ? DarkTheme : DefaultTheme;
 
   useEffect(() => {
+    // listing event emited by switch with value true/flase in switch.tsx
+    let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
+      setDarkApp(data);
+    });
+
     SplashScreen.hide()
+
   }, [])
 
   // TODO: fix url passing
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={appTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
