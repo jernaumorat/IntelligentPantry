@@ -26,4 +26,4 @@ TODO
   - [ ] Add pairing functionality (Blake)
   - [ ] Scan functionality (Blake)
   - [ ] Make dev-mode features disablable (Blake)
-  - [ ] 
+  - [ ] Add robot status and last scan
