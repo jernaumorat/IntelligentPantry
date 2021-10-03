@@ -1,8 +1,9 @@
-import math
-import time
+from io import StringIO
 from PIL import Image
 from Bot import Bot
+import json
 import requests
+import random
 # Default values
 
 width =1200
@@ -15,7 +16,7 @@ class PyBot(Bot):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-     
+        self.status = "idle"        
     def moveTo(self , x , y):
         self.x = x
         self.y = y  
@@ -48,13 +49,53 @@ class PyBot(Bot):
         print(response.text)
         return "200"
     
-    # Todo scan pantry    
-    def scan(self):
-        pass
+
     
     # Todo system state scan /idle date and time
     def getStatus(self):
         pass   
+
+    def sendItems(self):
+        fullItemList = ['apple','banana','nutrigrain','rice','weetbix','coffee','tea','pasta','tuna','corn','beans','lentals','milk','sauce','sugar','salt','jam','migoreng','chocolate','eggs']
+        
+        # n number of unique items to be selected and added
+        n = 2 #random.randint(5,19)        
+        itemList = []
+        for x in range(n):
+            # index of item to add then pop added items to avoid duplicates
+            indx = random.randint(0,len(fullItemList)-1)
+            itemList.append(fullItemList[indx])
+            fullItemList.pop(indx)
+        
+        #  list of dict items
+        files={}
+        dataList = []
+        for item in itemList:
+            dataList.append({
+                'label':item,
+                'quantity': random.randint(1,10),
+                'item_x':random.randint(0,100),
+                'item_y':random.randint(0,100),
+                'image_key':item +'.jpg'
+            })
+            files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
+        payload = {'payload':json.dumps(dataList)}
+        
+        response = requests.post('http://192.168.1.17:5000/pantry/', files=files,data=payload)
+        
+        # website that will return the request back in text. Very helpful in debugging and seeing the request
+        # response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
+        print(response.text)
+        return 
+    
+    # Todo scan pantry    
+    def scan(self):
+        # inform server we are busy
+        # simulate busy
+        # call delete database Endpoint
+        self.sendItems()
+        # inform server we are idle
+        return 
 
 # [x]Init should initialise the screen
 #   [ ] fix screen problem(cannot move or click because the server runing the window may need call back when updating is required not 100% sure)
