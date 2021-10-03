@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect ,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   StyleSheet,
@@ -20,7 +20,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
-  NavigationContainer,DarkTheme,DefaultTheme
+  NavigationContainer, DarkTheme, DefaultTheme
 } from '@react-navigation/native';
 
 import {
@@ -38,23 +38,17 @@ const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [darkApp, setDarkApp] = useState(false);
-  const appTheme = darkApp == true ? DarkTheme : DefaultTheme;
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const [darkApp, setDarkApp] = useState(isDarkMode);
+  const appTheme = darkApp ? DarkTheme : DefaultTheme;
 
   useEffect(() => {
     // listing event emited by switch with value true/flase in switch.tsx
     let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
       setDarkApp(data);
-  }
-  );
-  return ()=>{
-    true;
-  };
+    });
+
     SplashScreen.hide()
-    
+
   }, [])
 
   // TODO: fix url passing
