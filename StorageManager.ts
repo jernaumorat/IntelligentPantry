@@ -1,10 +1,10 @@
-import { useColorScheme } from "react-native";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { DEFAULT_URL, PItem } from './NetworkManager'
 
-interface SM {
+export interface SM {
+    id: number,
+
     getPantryItems(): Promise<PItem[]>,
     setPantryItems(pitems: PItem[]): Promise<void>,
 
@@ -23,178 +23,172 @@ interface SM {
     resetDefault(): Promise<void>,
 }
 
-export const StorageManager = () => {
-    let instance: SM;
-
-    const createInstance = () => {
-        return {
-            getPantryItems: async () => {
+export namespace StorageManager {
+    export const getPantryItems = async () => {
+        try {
+            let data = await AsyncStorage.getItem('@pantryItems');
+            if (data) {
                 try {
-                    let data = await AsyncStorage.getItem('@pantryItems');
-                    if (data) {
-                        try {
-                            return JSON.parse(data) as PItem[]
-                        } catch (e) {
-                            await instance.setPantryItems([])
-                            console.log(e)
-                            return []
-                        }
-                    } else {
-                        return []
-                    }
+                    return JSON.parse(data) as PItem[]
                 } catch (e) {
-                    await instance.setPantryItems([])
+                    await setPantryItems([])
                     console.log(e)
                     return []
                 }
-            },
-            setPantryItems: async (pitems) => {
+            } else {
+                return []
+            }
+        } catch (e) {
+            await setPantryItems([])
+            console.log(e)
+            return []
+        }
+    }
+
+    export const setPantryItems = async (pitems: PItem[]) => {
+        try {
+            let json = JSON.stringify(pitems)
+            await AsyncStorage.setItem('@pantryItems', json)
+            return
+        } catch (e) {
+            console.log(e)
+            return
+        }
+    }
+
+    export const getURL = async () => {
+        try {
+            let data = await AsyncStorage.getItem('@url');
+            if (data) {
                 try {
-                    let json = JSON.stringify(pitems)
-                    await AsyncStorage.setItem('@pantryItems', json)
-                    return
+                    return JSON.parse(data) as { http: string, https: string }
                 } catch (e) {
-                    console.log(e)
-                    return
-                }
-            },
-            getURL: async () => {
-                try {
-                    let data = await AsyncStorage.getItem('@url');
-                    if (data) {
-                        try {
-                            return JSON.parse(data) as { http: string, https: string }
-                        } catch (e) {
-                            await instance.setURL(DEFAULT_URL)
-                            console.log(e)
-                            return DEFAULT_URL
-                        }
-                    } else {
-                        return DEFAULT_URL
-                    }
-                } catch (e) {
-                    await instance.setURL(DEFAULT_URL)
+                    await setURL(DEFAULT_URL)
                     console.log(e)
                     return DEFAULT_URL
                 }
-            },
-            setURL: async (url) => {
+            } else {
+                return DEFAULT_URL
+            }
+        } catch (e) {
+            await setURL(DEFAULT_URL)
+            console.log(e)
+            return DEFAULT_URL
+        }
+    }
+
+    export const setURL = async (url: { http: string, https: string }) => {
+        try {
+            let json = JSON.stringify(url)
+            await AsyncStorage.setItem('@url', json)
+            return
+        } catch (e) {
+            console.log(e)
+            return
+        }
+    }
+
+    export const getToken = async () => {
+        try {
+            let data = await AsyncStorage.getItem('@token');
+            if (data) {
                 try {
-                    let json = JSON.stringify(url)
-                    await AsyncStorage.setItem('@url', json)
-                    return
+                    return JSON.parse(data) as string
                 } catch (e) {
-                    console.log(e)
-                    return
-                }
-            },
-            getToken: async () => {
-                try {
-                    let data = await AsyncStorage.getItem('@token');
-                    if (data) {
-                        try {
-                            return JSON.parse(data) as string
-                        } catch (e) {
-                            await instance.setToken('')
-                            console.log(e)
-                            return ''
-                        }
-                    } else {
-                        return ''
-                    }
-                } catch (e) {
-                    await instance.setToken('')
+                    await setToken('')
                     console.log(e)
                     return ''
                 }
-            },
-            setToken: async (token) => {
+            } else {
+                return ''
+            }
+        } catch (e) {
+            await setToken('')
+            console.log(e)
+            return ''
+        }
+    }
+
+    export const setToken = async (token: string) => {
+        try {
+            let json = JSON.stringify(token)
+            await AsyncStorage.setItem('@token', json)
+            return
+        } catch (e) {
+            console.log(e)
+            return
+        }
+    }
+
+    export const getDarkMode = async () => {
+        try {
+            let data = await AsyncStorage.getItem('@darkMode');
+            if (data) {
                 try {
-                    let json = JSON.stringify(token)
-                    await AsyncStorage.setItem('@token', json)
-                    return
+                    return JSON.parse(data) as boolean
                 } catch (e) {
-                    console.log(e)
-                    return
-                }
-            },
-            getDarkMode: async () => {
-                try {
-                    let data = await AsyncStorage.getItem('@darkMode');
-                    if (data) {
-                        try {
-                            return JSON.parse(data) as boolean
-                        } catch (e) {
-                            await instance.setDarkMode('system')
-                            console.log(e)
-                            return 'system'
-                        }
-                    } else {
-                        return 'system'
-                    }
-                } catch (e) {
-                    await instance.setDarkMode('system')
+                    await setDarkMode('system')
                     console.log(e)
                     return 'system'
                 }
-            },
-            setDarkMode: async (dmode) => {
+            } else {
+                return 'system'
+            }
+        } catch (e) {
+            await setDarkMode('system')
+            console.log(e)
+            return 'system'
+        }
+    }
+
+    export const setDarkMode = async (dmode: 'light' | 'dark' | 'system') => {
+        try {
+            let json = JSON.stringify(dmode)
+            await AsyncStorage.setItem('@darkMode', json)
+            return
+        } catch (e) {
+            console.log(e)
+            return
+        }
+    }
+
+    export const getFirstRun = async () => {
+        try {
+            let data = await AsyncStorage.getItem('@firstRun');
+            if (data) {
                 try {
-                    let json = JSON.stringify(dmode)
-                    await AsyncStorage.setItem('@darkMode', json)
-                    return
+                    return JSON.parse(data) as boolean
                 } catch (e) {
-                    console.log(e)
-                    return
-                }
-            },
-            getFirstRun: async () => {
-                try {
-                    let data = await AsyncStorage.getItem('@firstRun');
-                    if (data) {
-                        try {
-                            return JSON.parse(data) as boolean
-                        } catch (e) {
-                            await instance.setFirstRun(true)
-                            console.log(e)
-                            return true
-                        }
-                    } else {
-                        return true
-                    }
-                } catch (e) {
-                    await instance.setFirstRun(true)
+                    await setFirstRun(true)
                     console.log(e)
                     return true
                 }
-            },
-            setFirstRun: async (frun) => {
-                try {
-                    let json = JSON.stringify(frun)
-                    await AsyncStorage.setItem('@firstRun', json)
-                    return
-                } catch (e) {
-                    console.log(e)
-                    return
-                }
-            },
-            resetDefault: async () => {
-                await instance.setPantryItems([])
-                await instance.setURL(DEFAULT_URL)
-                await instance.setToken('')
-                await instance.setDarkMode('system')
-                await instance.setFirstRun(true)
+            } else {
+                return true
             }
-        } as SM
+        } catch (e) {
+            await setFirstRun(true)
+            console.log(e)
+            return true
+        }
     }
 
-    return {
-        getInstance: () => {
-            if (!instance) {
-                instance = createInstance();
-            }
-
-            return instance;
+    export const setFirstRun = async (frun: boolean) => {
+        try {
+            let json = JSON.stringify(frun)
+            await AsyncStorage.setItem('@firstRun', json)
+            return
+        } catch (e) {
+            console.log(e)
+            return
         }
+    }
+
+    export const resetDefault = async () => {
+        await setPantryItems([])
+        await setURL(DEFAULT_URL)
+        await setToken('')
+        await setDarkMode('system')
+        await setFirstRun(true)
     }
 }

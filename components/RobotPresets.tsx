@@ -59,12 +59,11 @@ export const RobotPreset = (props: any): JSX.Element => {
     const coordState = props.coords
     const setCoordState = props.setCoords
     const { colors } = useTheme();
-    let nm = NetworkManager().getInstance()
 
     const components_from_presets = (data: Preset[]): JSX.Element[] => {
         const final = []
         for (let preset of data) {
-            final.push(<Picker.Item key={preset.presetId} color ={colors.text}  label={preset.label} value={preset.presetId} />)
+            final.push(<Picker.Item key={preset.presetId} color={colors.text} label={preset.label} value={preset.presetId} />)
         }
 
         return final
@@ -78,7 +77,7 @@ export const RobotPreset = (props: any): JSX.Element => {
     const delete_preset = async () => {
         setDeleteVis(false)
         let pre = presetList.filter(item => { return item.presetId === selected })[0]
-        if (nm.deletePreset(pre)) {
+        if (await NetworkManager.deletePreset(pre)) {
             let pL = presetList
             pL = pL.filter(item => { return item !== pre })
             setPresetList(pL)
@@ -88,7 +87,7 @@ export const RobotPreset = (props: any): JSX.Element => {
 
     const create_preset = async () => {
         setCreateVis(false)
-        let pre = await nm.postPreset({ presetId: -1, label: newLabel, coords: coordState, presetX: null, presetY: null })
+        let pre = await NetworkManager.postPreset({ presetId: -1, label: newLabel, coords: coordState, presetX: null, presetY: null })
         if (pre) {
             let pL = presetList
             pL.push(pre)
@@ -100,7 +99,7 @@ export const RobotPreset = (props: any): JSX.Element => {
     }
 
     const update_state = async () => {
-        const presets: Preset[] = await nm.getPresets();
+        const presets: Preset[] = await NetworkManager.getPresets();
         setPresetList(presets);
 
         setSelected(presets[0].presetId)
@@ -110,7 +109,7 @@ export const RobotPreset = (props: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
-    
+
     const style = makeStyles(colors)
     return (<>
         <PresetDeleteDialog
@@ -128,11 +127,11 @@ export const RobotPreset = (props: any): JSX.Element => {
         <View style={{ flex: 2, flexDirection: 'row' }}>
             <View style={[style.pickerView, { flex: 7 }]}>
                 <Picker style={style.pickerStyle}
-                
-                selectedValue={selected} onValueChange={itemVal => {
-                    setSelected(itemVal)
-                    setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
-                }}>
+
+                    selectedValue={selected} onValueChange={itemVal => {
+                        setSelected(itemVal)
+                        setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
+                    }}>
                     {components_from_presets(presetList)}
                 </Picker>
             </View>
@@ -145,25 +144,25 @@ export const RobotPreset = (props: any): JSX.Element => {
     </>);
 }
 
-const makeStyles = (colors: any) =>  StyleSheet.create({
+const makeStyles = (colors: any) => StyleSheet.create({
     pickerView: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-        
+
         borderColor: colors.text,
-        borderBottomWidth:1,
+        borderBottomWidth: 1,
         width: 300,
         marginTop: 15,
-        marginLeft:20,
-        marginRight:20,
+        marginLeft: 20,
+        marginRight: 20,
         borderRadius: 10,
         alignSelf: 'center',
 
 
-   },
-    pickerStyle:{   
+    },
+    pickerStyle: {
         width: "100%",
-  
-       
-    }  
+
+
+    }
 });

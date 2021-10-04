@@ -9,12 +9,12 @@ const RootContainer = () => {
 
     const endFR = () => {
         setFRFlow(false);
-        StorageManager().getInstance().setFirstRun(false)
+        StorageManager.setFirstRun(false)
     }
 
     useEffect(() => {
         (async () => {
-            setFRFlow(await StorageManager().getInstance().getFirstRun())
+            setFRFlow(await StorageManager.getFirstRun())
         })()
 
         SplashScreen.hide()

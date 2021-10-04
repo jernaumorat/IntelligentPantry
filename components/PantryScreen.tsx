@@ -66,8 +66,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 
   const update_state = async (): Promise<void> => {
     setRefreshing(true)
-    let nm = NetworkManager().getInstance()
-    const data = await nm.getPantryItems()
+    const data = await NetworkManager.getPantryItems()
     setpState(data)
     await wait(1000).then(() => { setRefreshing(false) })
   }

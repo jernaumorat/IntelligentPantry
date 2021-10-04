@@ -10,7 +10,8 @@ import {
     Image,
 } from 'react-native';
 
-import { NetworkManager, PDetail, PItem } from '../NetworkManager';
+import { StorageManager } from '../StorageManager';
+import { NetworkManager, PDetail } from '../NetworkManager';
 import { useTheme } from '@react-navigation/native';
 
 const makeStyles = (colors: any) => StyleSheet.create({
@@ -28,7 +29,7 @@ const makeStyles = (colors: any) => StyleSheet.create({
         textAlign: 'right',
         textAlignVertical: 'center',
         fontWeight: 'bold',
-        color:colors.text,
+        color: colors.text,
     },
     DetailItem: {
         flex: 3,
@@ -36,7 +37,7 @@ const makeStyles = (colors: any) => StyleSheet.create({
         padding: 5,
         fontSize: 22,
         textAlign: 'left',
-        color:colors.text,
+        color: colors.text,
     }
 })
 
@@ -46,11 +47,8 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
 
     const { id } = route.params;
 
-    let nm = NetworkManager().getInstance()
-    const imgurl = nm.url + '/pantry/' + id + '/img'
-
     const update_state = async () => {
-        const pdetail: PDetail = await nm.getPantryDetail(id);
+        const pdetail: PDetail = await NetworkManager.getPantryDetail(id);
         setDetailState(pdetail);
     }
 
@@ -61,7 +59,7 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     const pdStyles = makeStyles(colors)
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
-            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: imgurl }} />
+            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: detailState?.uri }} />
             <View style={{ flex: 5, flexDirection: 'column' }}>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Item ID</Text>

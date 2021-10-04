@@ -14,11 +14,6 @@ import {
   Image,
 } from 'react-native';
 
-// TODO: remove all NewAppScreen imports, then remove from package deps.
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
 import {
   NavigationContainer, DarkTheme, DefaultTheme
 } from '@react-navigation/native';

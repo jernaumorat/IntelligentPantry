@@ -22,8 +22,6 @@ export const RobotCoordinate = (props: any): JSX.Element => {
     const setxPos = (x: String) => setCoordState({ x: Number(x), y: coordState.y })
     const setyPos = (y: String) => setCoordState({ x: coordState.x, y: Number(y) })
 
-    let nm = NetworkManager().getInstance()
-
     useEffect(() => {
         setTextXState(coordState.x.toString());
         setTextYState(coordState.y.toString())
@@ -39,7 +37,7 @@ export const RobotCoordinate = (props: any): JSX.Element => {
                 <TextInput style={[style.textInput, { flex: 2 }]} editable={false} textAlign={'right'}>Y</TextInput>
                 <TextInput key={coordState.y} style={[style.textInput, { flex: 5 }]} maxLength={4} value={textYState} onChangeText={setTextYState} onEndEditing={() => setyPos(textYState)} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
             </View>
-            <Button color='#1b7931' title={"Go"} onPress={() => { nm.postCoords(coordState) }} />
+            <Button color='#1b7931' title={"Go"} onPress={() => { NetworkManager.postCoords(coordState) }} />
         </View>
     );
 }
