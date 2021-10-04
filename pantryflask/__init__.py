@@ -13,18 +13,18 @@ from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
 from pantryflask.util import bp as util_bp
 
-ip = socket.inet_aton(socket.gethostbyname(socket.getfqdn()))
+ip = os.environ.get('LISTEN_IP')
 
 httpZconf = ServiceInfo(
         "_http._tcp.local.",
         "intpantry._http._tcp.local.",
-        addresses=[ip],
+        addresses=[socket.inet_aton(ip)],
         port=5000)
 
 httpsZconf = ServiceInfo(
         "_https._tcp.local.",
         "intpantry._https._tcp.local.",
-        addresses=[ip],
+        addresses=[socket.inet_aton(ip)],
         port=5443)
 
 zc = Zeroconf()
