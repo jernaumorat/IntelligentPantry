@@ -30,6 +30,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SplashScreen from 'react-native-splash-screen';
 
+import { StorageManager } from './StorageManager'
 import { RobotScreen } from './components/RobotScreen'
 import { PantryStackScreen } from './components/PantryStackScreen'
 import { SettingsScreen } from './components/SettingsScreen'
@@ -42,6 +43,7 @@ const App = (): JSX.Element => {
   const appTheme = darkApp ? DarkTheme : DefaultTheme;
 
   useEffect(() => {
+
     // listing event emited by switch with value true/flase in switch.tsx
     let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
       setDarkApp(data);

@@ -1,3 +1,8 @@
+export const DEFAULT_URL = {
+    http: 'http://intpantry._http._tcp.local:5000',
+    https: 'https://intpantry._https._tcp.local:5000'
+}
+
 export interface Coords {
     x: number,
     y: number
@@ -63,7 +68,7 @@ export const NetworkManager = () => {
 
                 return pitems;
             },
-            getPantryDetail: async (id: number) => {
+            getPantryDetail: async (id) => {
                 let pitem: PDetail;
 
                 const res = await fetch(url + '/pantry/' + id);
@@ -92,7 +97,7 @@ export const NetworkManager = () => {
 
                 return status;
             },
-            postPreset: async (preset: Preset) => {
+            postPreset: async (preset) => {
                 const res = await fetch(url + '/robot/presets', {
                     method: 'POST',
                     headers: {
@@ -110,7 +115,7 @@ export const NetworkManager = () => {
                     return null
                 }
             },
-            postCoords: async (coords: Coords) => {
+            postCoords: async (coords) => {
                 const res = await fetch(url + '/robot/control', {
                     method: 'POST',
                     headers: {
@@ -127,7 +132,7 @@ export const NetworkManager = () => {
                 });
                 return res.status === 200;
             },
-            deletePreset: async (preset: Preset) => {
+            deletePreset: async (preset) => {
                 const res = await fetch(url + '/robot/presets/' + preset.presetId, {
                     method: 'DELETE',
                     headers: {
@@ -138,7 +143,7 @@ export const NetworkManager = () => {
 
                 return res.status === 200;
             }
-        }
+        } as NM
     }
 
     return {
