@@ -49,7 +49,7 @@ def add_items():
         img = request.files[data['image_key']] or None
         new_item = PantryItem(item_label=data['label'], item_quantity=data['quantity'], item_x=data['item_x'], item_y=data['item_y'], item_image=img.read())
         db.session.add(new_item)
-        db.session.commit()
+    db.session.commit()
     resp = payload
     resp.headers.set('Location', f'{request.base_url}')
     return "resp", 201
