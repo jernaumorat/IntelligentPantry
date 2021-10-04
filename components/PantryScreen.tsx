@@ -20,6 +20,7 @@ import {
 // TODO: remove all NewAppScreen imports, then remove from package deps.
 import { useTheme } from '@react-navigation/native';
 import { NetworkManager, PItem } from '../NetworkManager'
+import { StorageManager } from '../StorageManager';
 
 const PantryStyles = StyleSheet.create({
   pantryItem: {
@@ -42,7 +43,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
-  const [pState, setpState] = useState<PItem[]>([])
+  const [pState, setpState] = useState<PItem[]>()
   const [isRefreshing, setRefreshing] = useState(true)
   const { colors } = useTheme();
 
@@ -66,7 +67,12 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 
   const update_state = async (): Promise<void> => {
     setRefreshing(true)
-    const data = await NetworkManager.getPantryItems()
+    let data = await StorageManager.getPantryItems();
+    NetworkManager.getPantryItems().then(d => {
+      data = d
+      StorageManager.setPantryItems(data)
+    })
+
     setpState(data)
     await wait(1000).then(() => { setRefreshing(false) })
   }
@@ -81,7 +87,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
      We are only updating the state on user intervention at this time, so no dependancies are required here. */
   useEffect(() => {
     update_state()
-
+    setInterval(update_state, 60000)
     return () => {
       setRefreshing(false)
     }

@@ -2,13 +2,13 @@ TODO
 ====
 
 - General / Global:
-  - [ ] If net request fails on first load, app softlocks with no way to refresh. (Nathan)
+  - [X] If net request fails on first load, app softlocks with no way to refresh. (Nathan)
   - [ ] Handle request failure. (Nathan)
   - [ ] Create first-run flow, pairing and configuring server (Nathan)
-  - [ ] Set up persistant on-device k/v store for settings and cache (Nathan)
+  - [X] Set up persistant on-device k/v store for settings and cache (Nathan)
   - [X] Light/dark mode stylesheets, and app-wide stylesheets (Bonita)
   - [X] General and robust networking singleton (Nathan)
-    - [ ] set up mDNS (Nathan and Blake)
+    - [X] set up mDNS (Nathan and Blake)
     - [ ] Allow mDNS override in settings (Nathan)
   - [ ] Work out production build process (Nathan)
 - PantryScreen:
@@ -26,4 +26,4 @@ TODO
   - [ ] Add pairing functionality (Blake)
   - [ ] Scan functionality (Blake)
   - [ ] Make dev-mode features disablable (Blake)
-  - [ ] Add robot status and last scan
+  - [ ] Add robot status and last scan (Blake)

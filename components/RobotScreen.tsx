@@ -30,7 +30,7 @@ import { Coords, NetworkManager } from '../NetworkManager';
 import { StorageManager } from '../StorageManager';
 
 export const RobotScreen = (props: any): JSX.Element => {
-    const [imgUri, setImgUri] = useState('http://localhost')
+    const [imgUri, setImgUri] = useState('http://place.holder.localhost')
     const [coordState, setCoordState] = useState<Coords>({ x: 0, y: 0 })
     const updateCoords = (coords: Coords) => setCoordState(coords)
 

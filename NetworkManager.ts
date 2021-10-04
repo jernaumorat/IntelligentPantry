@@ -63,13 +63,9 @@ export namespace NetworkManager {
     export const getPantryItems = async () => {
         let pitems: PItem[];
         let url = (await StorageManager.getURL()).https
-        try {
-            const res = await fetch(url + '/pantry/');
-            pitems = await res.json();
-        } catch (error) {
-            console.log(error)
-            return [];
-        }
+
+        const res = await fetch(url + '/pantry/');
+        pitems = await res.json();
 
         for (let item of pitems) {
             item.uri = url + '/pantry/' + item.id.toString() + '/img'
@@ -84,8 +80,10 @@ export namespace NetworkManager {
 
         const res = await fetch(url + '/pantry/' + id);
         pitem = await res.json();
+
         pitem.coords = { x: pitem.x, y: pitem.y }
         pitem.uri = url + '/pantry/' + pitem.id.toString() + '/img'
+
         return pitem;
     }
 

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useState } from 'react';
-import { Switch as RNSwitch, Text, useColorScheme, View } from 'react-native';
+import { Switch as RNSwitch } from 'react-native';
 
 //react native Library used to send and recieve events https://www.npmjs.com/package/react-native-event-listeners
 import { EventRegister } from 'react-native-event-listeners'
@@ -21,11 +21,9 @@ export const ThemeSwitch = (props: any): JSX.Element => {
     }
 
     return (
-
         <RNSwitch
             trackColor={{ true: 'grey', false: 'black' }}
             style={{ transform: [{ scaleX: 1 }, { scaleY: 1 }] }}
             value={isEnabled} onValueChange={toggleScheme} />
-
     );
 }

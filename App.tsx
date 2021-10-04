@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { lazy, useEffect, useState } from 'react';
 
 import {
   StyleSheet,
@@ -48,7 +48,6 @@ const App = (): JSX.Element => {
 
   }, [])
 
-  // TODO: fix url passing
   return (
     <NavigationContainer theme={appTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
@@ -72,6 +71,7 @@ const App = (): JSX.Element => {
           return (<Ionicons name={iconName} size={size} color={color} />)
         },
         tabBarActiveTintColor: '#1b7931',
+        lazy: false
       })}>
         <Tab.Screen name="Robot" component={RobotScreen} />
         <Tab.Screen name="Pantry" component={PantryStackScreen} />
@@ -80,24 +80,5 @@ const App = (): JSX.Element => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
