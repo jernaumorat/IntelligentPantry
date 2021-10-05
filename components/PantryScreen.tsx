@@ -14,8 +14,15 @@ import {
   View,
   Image,
   RefreshControl,
+  TextInput,
   TouchableOpacity,
+  Alert,
+
 } from 'react-native';
+
+import {
+  Picker
+} from '@react-native-picker/picker';
 
 // TODO: remove all NewAppScreen imports, then remove from package deps.
 import { useTheme } from '@react-navigation/native';
@@ -45,12 +52,57 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   const [pState, setpState] = useState<PItem[]>([])
   const [isRefreshing, setRefreshing] = useState(true)
   const { colors } = useTheme();
+  const [searchtext, setSearchText] = useState("");
+  const [selectedValue, setSelectedValue] = useState("A-Z");
+  const [filteredDataSource, setFilteredDataSource] = useState<PItem[]>([]);
 
   // TODO: move all light/dark mode to context
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: colors.background,
   };
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      const newData = pState.filter(
+        function (item) {
+          const itemData = item.label
+            ? item.label.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearchText(text);
+    } else {
+      setFilteredDataSource(pState);
+      setSearchText(text);
+    }
+  };
+  const sortFilterFunction = (itemValue, itemIndex) =>{
+    
+   
+    if(itemValue==="A-Z")
+    {
+      filteredDataSource.sort((a, b) => (a.label < b.label) ? 1 : -1);
+    }
+    if(itemValue==="Z-A")
+    {
+      filteredDataSource.sort((a, b) => (a.label > b.label) ? 1 : -1);
+    
+    }
+    if(itemValue==="ASC(Qty)")
+    {
+    filteredDataSource.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
+    }
+    if(itemValue==="DESC(Qty)")
+    {
+    filteredDataSource.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
+    }
+    setSelectedValue(itemValue);
+   
+      
+ };
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
@@ -69,10 +121,11 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     let nm = NetworkManager().getInstance()
     const data = await nm.getPantryItems()
     setpState(data)
+    setFilteredDataSource(data);
     await wait(1000).then(() => { setRefreshing(false) })
   }
 
-  const pItem_components = pState ? components_from_pitems(pState) : []
+  const pItem_components = filteredDataSource ? components_from_pitems(filteredDataSource) : []
 
   /* useEffect(func, []) runs func when component is first loaded. 
      The return statement of func expects a callback or lambda, and is executed when the component is cleaned up.
@@ -92,6 +145,50 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     <ScrollView contentInsetAdjustmentBehavior="automatic"
       style={[backgroundStyle, { height: '100%' }]}
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}>
+         <View style={{
+           backgroundColor:colors.card,
+          
+       
+         }}>
+         <TextInput
+        style={
+          {
+            height: 40,
+            margin: 12,
+            borderWidth: 1,
+            padding: 10,
+            backgroundColor:"#ffffff",
+            
+            
+          }
+        }
+        placeholderTextColor='green'
+       // onChangeText={setSearchText}
+       onChangeText={(text) => searchFilterFunction(text)}
+        value={searchtext}
+      />
+      <Picker
+        selectedValue={selectedValue}
+        style={
+          {
+            height: 40,
+            margin: 12,
+            borderWidth: 1,
+            padding: 10,
+            borderColor:"#000000",
+            width:"100%",
+            
+          }
+        }
+        
+        onValueChange={(itemValue, itemIndex) => sortFilterFunction(itemValue,itemIndex)}
+      >
+        <Picker.Item color ={colors.primary} label="A-Z" value="A-Z" />
+        <Picker.Item color ={colors.primary} label="Z-A" value="Z-A" />
+        <Picker.Item color ={colors.primary} label="ASC" value="ASC(Qty)" />
+        <Picker.Item color ={colors.primary} label="DESC" value="DESC(Qty)" />
+      </Picker>
+      </View>
       {pItem_components}
     </ScrollView>
   )
