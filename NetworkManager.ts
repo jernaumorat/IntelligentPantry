@@ -1,5 +1,3 @@
-import { PresetCreateDialog } from "./components/RobotPresets";
-
 export interface Coords {
     x: number,
     y: number

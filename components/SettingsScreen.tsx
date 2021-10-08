@@ -16,11 +16,8 @@ import {
     RefreshControl,
 } from 'react-native';
 
-// TODO: remove all NewAppScreen imports, then remove from package deps.
-import {
-    Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import { Switch } from '../components';
+import { ThemeSwitch } from './ThemeSwitch';
+
 export const SettingsScreen = (props: any): JSX.Element => {
     return (
         <View style={{ flex: 1, paddingLeft: 30, paddingRight: 30, justifyContent: 'space-evenly' }}>

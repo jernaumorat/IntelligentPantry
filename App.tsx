@@ -3,7 +3,7 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect ,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   StyleSheet,
@@ -20,7 +20,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
-  NavigationContainer,DarkTheme,DefaultTheme
+  NavigationContainer, DarkTheme, DefaultTheme
 } from '@react-navigation/native';
 
 import {
@@ -50,13 +50,10 @@ const App = (): JSX.Element => {
     // listing event emited by switch with value true/flase in switch.tsx
     let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
       setDarkApp(data);
-  }
-  );
-  return ()=>{
-    true;
-  };
+    });
+
     SplashScreen.hide()
-    
+
   }, [])
 
   const scheme = useColorScheme();
