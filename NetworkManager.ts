@@ -1,5 +1,5 @@
 import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
-import { StorageManager, SM } from "./StorageManager";
+import { StorageManager } from "./StorageManager";
 
 export const DEFAULT_URL = {
     http: 'http://intpantry._http._tcp.local:5000',
@@ -37,27 +37,40 @@ export interface Status {
     lastScan: Date
 }
 
-interface NM {
-    url: { http: string, https: string },
-    cameraUrl(): string,
-
-    getPantryItems(): Promise<PItem[]>,
-    getPantryDetail(id: number): Promise<PDetail>,
-    getPresets(): Promise<Preset[]>,
-    getStatus(): Promise<Status>,
-
-    postPreset(preset: Preset): Promise<Preset | null>,
-    postCoords(coords: Coords): Promise<boolean>,
-    postScan(): Promise<boolean>,
-
-    deletePreset(preset: Preset): Promise<boolean>
-}
-
 export namespace NetworkManager {
 
     export const cameraUrl = async () => {
         let url = (await StorageManager.getURL()).https + '/robot/camera'
         return url
+    }
+
+    export const getPairingCode = async () => {
+        let url = (await StorageManager.getURL()).http + '/pair'
+        let bearer = await StorageManager.getToken()
+        let res
+        if (bearer) {
+            res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + bearer
+                }
+            })
+        } else {
+            res = await fetch(url)
+        }
+
+        let code = await res.json()
+        return code
+    }
+
+    export const getToken = async (code: string) => {
+        let url = (await StorageManager.getURL()).http + '/pair'
+        let res = await fetch(url + '?code=' + code)
+
+        let token = await res.json()
+        return token
     }
 
     export const getPantryItems = async () => {

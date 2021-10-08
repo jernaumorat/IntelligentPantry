@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-// TODO: remove all NewAppScreen imports, then remove from package deps.
+// TODO remove all NewAppScreen imports, then remove from package deps.
 import { useTheme } from '@react-navigation/native';
 import { NetworkManager, PItem } from '../NetworkManager'
 import { StorageManager } from '../StorageManager';
@@ -47,7 +47,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   const [isRefreshing, setRefreshing] = useState(true)
   const { colors } = useTheme();
 
-  // TODO: move all light/dark mode to context
+  // TODO move all light/dark mode to context
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: colors.background,

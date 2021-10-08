@@ -2,27 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { DEFAULT_URL, PItem } from './NetworkManager'
 
-export interface SM {
-    id: number,
-
-    getPantryItems(): Promise<PItem[]>,
-    setPantryItems(pitems: PItem[]): Promise<void>,
-
-    getURL(): Promise<{ http: string, https: string }>,
-    setURL(url: { http: string, https: string }): Promise<void>,
-
-    getToken(): Promise<string>,
-    setToken(token: string): Promise<void>,
-
-    getDarkMode(): Promise<'light' | 'dark' | 'system'>,
-    setDarkMode(dmode: 'light' | 'dark' | 'system'): Promise<void>,
-
-    getFirstRun(): Promise<boolean>,
-    setFirstRun(frun: boolean): Promise<void>,
-
-    resetDefault(): Promise<void>,
-}
-
 export namespace StorageManager {
     export const getPantryItems = async () => {
         try {
