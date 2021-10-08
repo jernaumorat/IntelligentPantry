@@ -215,12 +215,6 @@ const FRPair: React.FC<{ navigation: any }> = ({ navigation }) => {
 }
 
 const FRCode: React.FC<{ navigation: any }> = ({ navigation }) => {
-    const [disabled, setDisabled] = useState(false)
-    const [code, setCode] = useState('')
-
-    const codeCallback = (code: string) => {
-        setCode(code)
-    }
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
             <View style={styles.FRHeader}>
