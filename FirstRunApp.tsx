@@ -82,8 +82,11 @@ const FRCodeEntry: React.FC<{ success: () => void }> = ({ success }) => {
         if (code.length === 4) {
             let token = await NetworkManager.getToken(code)
             if (token === null) {
+                await wait(750)
                 setInputValue(['', '', '', ''])
                 in_1.current?.focus()
+
+                return
             }
 
             StorageManager.setToken(token)
@@ -120,6 +123,7 @@ const FRCodeEntry: React.FC<{ success: () => void }> = ({ success }) => {
                 contextMenuHidden={true}
                 maxLength={1}
                 value={inputValue[1]}
+                onKeyPress={(e) => { if (e.nativeEvent.key === 'Backspace') { setInputValue(['', inputValue[1], inputValue[2], inputValue[3]]); in_1.current?.focus() } }}
                 onChange={() => in_3.current?.focus()}
                 onChangeText={(text) => setInputValue([inputValue[0], text, inputValue[2], inputValue[3]])} />
             <TextInput
@@ -132,6 +136,7 @@ const FRCodeEntry: React.FC<{ success: () => void }> = ({ success }) => {
                 contextMenuHidden={true}
                 maxLength={1}
                 value={inputValue[2]}
+                onKeyPress={(e) => { if (e.nativeEvent.key === 'Backspace') { setInputValue([inputValue[0], '', inputValue[2], inputValue[3]]); in_2.current?.focus() } }}
                 onChange={() => in_4.current?.focus()}
                 onChangeText={(text) => setInputValue([inputValue[0], inputValue[1], text, inputValue[3]])} />
             <TextInput
@@ -144,6 +149,7 @@ const FRCodeEntry: React.FC<{ success: () => void }> = ({ success }) => {
                 contextMenuHidden={true}
                 maxLength={1}
                 value={inputValue[3]}
+                onKeyPress={(e) => { if (e.nativeEvent.key === 'Backspace') { setInputValue([inputValue[0], inputValue[1], '', inputValue[3]]); in_3.current?.focus() } }}
                 onChange={() => Keyboard.dismiss()}
                 onChangeText={(text) => setInputValue([inputValue[0], inputValue[1], inputValue[2], text])} />
         </View>
