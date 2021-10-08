@@ -37,11 +37,13 @@ import { EventRegister } from 'react-native-event-listeners'
 const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
-  const isDarkMode = useColorScheme() === 'dark';
+  
+  
+  //const isDarkMode = useColorScheme() === 'dark';
   const [darkApp, setDarkApp] = useState(false);
   const appTheme = darkApp == true ? DarkTheme : DefaultTheme;
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+   // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   useEffect(() => {
@@ -57,9 +59,10 @@ const App = (): JSX.Element => {
     
   }, [])
 
+  const scheme = useColorScheme();
   // TODO: fix url passing
   return (
-    <NavigationContainer theme={appTheme}>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
