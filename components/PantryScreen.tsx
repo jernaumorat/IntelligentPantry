@@ -1,30 +1,23 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React, {
   useState,
   useEffect,
 } from 'react';
 
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Image,
   RefreshControl,
   TextInput,
   TouchableOpacity,
-  Alert,
-
 } from 'react-native';
 
 import {
   Picker
 } from '@react-native-picker/picker';
 
-// TODO remove all NewAppScreen imports, then remove from package deps.
 import { useTheme } from '@react-navigation/native';
 import { NetworkManager, PItem } from '../NetworkManager'
 import { StorageManager } from '../StorageManager';
