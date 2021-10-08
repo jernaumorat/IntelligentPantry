@@ -38,7 +38,15 @@ const App = (): JSX.Element => {
   useEffect(() => {
     SplashScreen.hide()
   }, [])
-
+  // create the state var and set func
+  const [devMode, setDevMode] = useState('true')
+  
+  //set component as nothing or if devMode = true enable robot nav tab icon
+  let RobotScreenComponent;
+  if(devMode){
+      RobotScreenComponent = <Tab.Screen name="Robot" component={RobotScreen} />
+  }
+  
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
@@ -64,9 +72,9 @@ const App = (): JSX.Element => {
         tabBarActiveTintColor: '#1b7931',
         lazy: false
       })}>
-        <Tab.Screen name="Robot" component={RobotScreen} />
+        {RobotScreenComponent}
         <Tab.Screen name="Pantry" component={PantryStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Settings" children={()=><SettingsScreen devMode={devMode} setDevMode={setDevMode}/>}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
