@@ -33,23 +33,14 @@ import { EventRegister } from 'react-native-event-listeners'
 const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [darkApp, setDarkApp] = useState(isDarkMode);
-  const appTheme = darkApp ? DarkTheme : DefaultTheme;
+  const scheme = useColorScheme();
 
   useEffect(() => {
-
-    // listing event emited by switch with value true/flase in switch.tsx
-    let eventListener = EventRegister.addEventListener('changeTheme', (data) => {
-      setDarkApp(data);
-    });
-
     SplashScreen.hide()
-
   }, [])
 
   return (
-    <NavigationContainer theme={appTheme}>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator initialRouteName="Pantry" screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
