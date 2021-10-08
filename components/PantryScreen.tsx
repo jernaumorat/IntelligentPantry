@@ -80,13 +80,13 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     }
   };
   const sortFilterFunction = (itemValue, itemIndex) =>{
-    
+    //function to sort data according to name and qty
    
-    if(itemValue==="A-Z")
+    if(itemValue==="Z-A")
     {
       filteredDataSource.sort((a, b) => (a.label < b.label) ? 1 : -1);
     }
-    if(itemValue==="Z-A")
+    if(itemValue==="A-Z")
     {
       filteredDataSource.sort((a, b) => (a.label > b.label) ? 1 : -1);
     
@@ -104,13 +104,28 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
       
  };
 
+
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
     const final = []
-
+    let header ="";
     for (let pItem of data) {
+      let labelchat = pItem.label.charAt(0);
+      //Function to make sectioning - Take the first leter of the name and convert it to header
+      if(header!=labelchat)
+      {
+        final.push(<Text style={{backgroundColor:colors.card,color:colors.text,fontSize:18,paddingStart:5,paddingTop:5}}>{labelchat.toUpperCase()}</Text>);
+        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
+        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
+        header=labelchat;
+      }
+      else
+      {
+        //Else push items to the list
       final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
-        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />)
+        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
+      }
+        
     }
 
     return final
@@ -140,11 +155,12 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
       setRefreshing(false)
     }
   }, [])
-
+//Added a TextInput for search and a Picker for sorting 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic"
       style={[backgroundStyle, { height: '100%' }]}
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}>
+
          <View style={{
            backgroundColor:colors.card,
           
