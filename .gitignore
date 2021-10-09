@@ -1,4 +1,12 @@
 __pycache__/
 temp_img.jpg
 camera.jpg
-
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+Lib/
+Scripts/
+pyvenv.cfg
