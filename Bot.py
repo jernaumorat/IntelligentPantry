@@ -16,6 +16,6 @@ class Bot(ABC):
     
     # system state scan /idle date and time
     @abstractmethod
-    def getStatus(self):
+    def updateStatus(self):
         pass
     

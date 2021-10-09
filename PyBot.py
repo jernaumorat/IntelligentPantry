@@ -4,6 +4,7 @@ from Bot import Bot
 import json
 import requests
 import random
+from datetime import datetime
 # Default values
 
 width =1200
@@ -44,22 +45,37 @@ class PyBot(Bot):
         # }
         # response = requests.request("POST", url, files=files, headers=headers)
         # Need to move this hard coded address out into a env_var file
-        response = requests.post('http://192.168.1.17:5000/robot/camera', files=files)
+        response = requests.post('http://192.168.0.21:5000/robot/camera', files=files)
 
         print(response.text)
         return "200"
     
-
+    def getStatus(self):
+        statusTime = datetime.now() 
+        # Setup dataset for sending status time and  
+        print(statusTime.__str__) 
+        statusList = []
+        # for statusTime in statusList:
+        statusList.append({
+            
+            'state': self.status
+        })
+        return statusList
     
     # Todo system state scan /idle date and time
-    def getStatus(self):
-        pass   
+    def updateStatus(self):
+        payload = {'payload':json.dumps(self.getStatus())}
+        
+        response = requests.post('http://192.168.0.21:5000/pantry/status', data=payload)
+        response = requests.post('https://httpbin.org/post', data=payload)
+        print(response.text)
+        return "200" 
 
     def sendItems(self):
         fullItemList = ['apple','banana','nutrigrain','rice','weetbix','coffee','tea','pasta','tuna','corn','beans','lentals','milk','sauce','sugar','salt','jam','migoreng','chocolate','eggs']
         
         # n number of unique items to be selected and added
-        n = 2 #random.randint(5,19)        
+        n = random.randint(5,19)        
         itemList = []
         for x in range(n):
             # index of item to add then pop added items to avoid duplicates
@@ -81,19 +97,24 @@ class PyBot(Bot):
             files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
         payload = {'payload':json.dumps(dataList)}
         
-        response = requests.post('http://192.168.1.17:5000/pantry/', files=files,data=payload)
+        response = requests.post('http://192.168.0.21:5000/pantry/', files=files,data=payload)
         
         # website that will return the request back in text. Very helpful in debugging and seeing the request
-        # response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
+        response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
         print(response.text)
         return 
     
     # Todo scan pantry    
     def scan(self):
         # inform server we are busy
+        self.status = 'busy'
         # simulate busy
+        self.updateStatus()
         # call delete database Endpoint
+        response = requests.delete('http://192.168.0.21:5000/pantry/delete')
         self.sendItems()
+        self.status = 'idle'
+        self.updateStatus()
         # inform server we are idle
         return 
 
