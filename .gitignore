@@ -22,6 +22,7 @@ wheels/
 *.egg 
 *.manifest 
 *.spec 
+.DS_Store
 
 # Log files
 pip-log.txt

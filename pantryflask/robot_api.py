@@ -70,4 +70,33 @@ def put_image():
     img_file.save('camera.jpg')
     resp = jsonify('OK')
     return resp
+
+# To implement status GET endpoint 
+@bp.route('/status', methods=['GET'])
+def get_status():
+    # data = []
+    # for item in SystemStatus.query.all():
+    #     data.append(item.to_dict)
+    status = SystemStatus.query.get_or_404()
+    resp = jsonify(status.to_dict())
+    return resp, 
+
+
+@bp.route('/status', methods=['POST'])
+def update_status(status_time):
+    status = SystemStatus.query.get_or_404(status_time)
+    url ='http://127.0.0.1:5050'
+    resp = requests.post(url+'/status',payload = request.get_json())
+    return resp, 200
+
+    resp = jsonify(data)
+    if data == []:
+        return resp, 204
     
+    return resp
+
+@bp.route('/scan', methods=['POST'])
+def start_scan(status_time):
+    url ='http://127.0.0.1:5050'
+    resp = requests.post(url+'/scan',payload = request.get_json())
+    return resp
