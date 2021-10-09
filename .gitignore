@@ -7,4 +7,6 @@ camera.jpg
 env/
 venv/
 ENV/
-
+Lib/
+Scripts/
+pyvenv.cfg
