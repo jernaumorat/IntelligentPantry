@@ -10,6 +10,7 @@ import {
     StyleSheet,
     Text,
     useColorScheme,
+    SectionList,
     View,
     Button,
     Image,
@@ -17,6 +18,7 @@ import {
 } from 'react-native';
 
 import { StorageManager } from '../StorageManager'
+import { NetworkManager } from '../NetworkManager'
 import { ThemeSwitch } from './ThemeSwitch';
 
 export const SettingsScreen = (props: any): JSX.Element => {
@@ -27,13 +29,60 @@ export const SettingsScreen = (props: any): JSX.Element => {
     const onClickDevMode = ()=> {
         setDevMode(!devMode);
     }
+    // Menu item Strings
+    const DATA = [
+        {
+          title: "Robot",
+          data: ["Scan", "Pair"]
+        },
+        {
+            title: "System",
+            data: ["Dev Mode","Reset All Settings"]
+          }];
+    
+        // Menu Item functions
+    const onClickSetting = (item:String)=> {
+        if(item == "Scan"){
+            NetworkManager.postScan;
+        }
+        if(item == "Pair"){    
+        }
+        if(item == "Dev Mode"){
+            setDevMode(!devMode);
+        }
+        if(item == "Reset All Settings"){
+            StorageManager.resetDefault
+            setDevMode(!devMode);
+        }
+    }
     return (
-        <View style={{ flex: 1, paddingLeft: 30, paddingRight: 30, justifyContent: 'space-evenly' }}>
-             
-            <Button color={'#1b7931'} title={"Scan"} onPress={() => { }} />
-            <Button color={'#1b7931'} title={"Pair"} onPress={() => { }} />
-            <Button color={'#1b7931'} title={"Dev Mode"} onPress={onClickDevMode} />
-            <Button color={'#1b7931'} title={"Reset All Settings"} onPress={StorageManager.resetDefault} />
+        <View style={{ flex: 1, justifyContent: 'space-evenly',paddingTop: StatusBar.currentHeight,
+        marginHorizontal: 32 }}>
+            <SectionList
+                sections={DATA}
+                renderItem={({item}) => <Text style={styles.item} onPress={()=>onClickSetting(item)}>{item}</Text>}
+                
+                renderSectionHeader={({section}) => (<Text style={styles.title}>{section.title}</Text>)}
+                keyExtractor={( index) => index}
+            />
+          
         </View>
     )
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: StatusBar.currentHeight,
+        marginHorizontal: 16
+    },
+    item: {
+        backgroundColor: "#1b7931",
+        padding: 15,
+        marginVertical: 1
+    },
+    title: {
+        marginTop: 20,
+        marginBottom: 10,
+        fontSize: 22
+    }
+});
