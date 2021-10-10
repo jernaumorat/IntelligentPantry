@@ -18,17 +18,18 @@ import {
     Switch,
     TouchableOpacity,
 } from 'react-native';
-
+import { useTheme } from "@react-navigation/native";
 import { StorageManager } from '../StorageManager'
 import { NetworkManager } from '../NetworkManager'
 import { ThemeSwitch } from './ThemeSwitch';
 
 export const SettingsScreen = (props: any): JSX.Element => {
+    const colors = useTheme().colors
     // load props
     const devMode = props.devMode
-    const setDevMode = props.setDevMode    
+    const setDevMode = props.setDevMode
     //function called on devmode click. sets devMode prop for app.tsx to remove nav item
-    const onClickDevMode = ()=> {
+    const onClickDevMode = () => {
         setDevMode(!devMode);
     }
     // Menu item Strings
@@ -38,9 +39,9 @@ export const SettingsScreen = (props: any): JSX.Element => {
             title: "Robot",
             data: [
             {
-                label:"Scasn",
+                label:"Scan",
                 control:"text",
-                actiion: ()=>{NetworkManager.postScan();;}
+                actiion: ()=>{NetworkManager.postScan();}
             },
             { 
                 label:"Pair",
@@ -66,30 +67,33 @@ export const SettingsScreen = (props: any): JSX.Element => {
     
     const Item = (props: any) => (
         <TouchableOpacity onPress={()=>props.actiion()}>
-        <View style={styles.item}>
-
+        <View style={{...styles.item,backgroundColor: colors.card,}}>
             {/* inline syting condition for critical items */}
-            <Text style ={props.control =="critical text" ? styles.critical: null}>{props.label}</Text>            
+            <Text style ={props.control =="critical text" ? styles.critical : {color: colors.text}}>
+                {props.label}
+            </Text>
             {props.control =="switch" ?
                 <Switch 
-                    style={styles.switch}
                     value={devMode} 
                     onValueChange={()=>props.actiion()}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }} />:null
+                    trackColor={{ false: "#a1a1a1", true: "#a1a1a1" }}
+                    thumbColor={devMode ? "#1e9e27" : "#f4f3f4"} />:null
             }
         </View>
         </TouchableOpacity>
       );
+
     return (
-        <View style={{ flex: 1, justifyContent: 'space-evenly',paddingTop: StatusBar.currentHeight,
-        marginHorizontal: 32 }}>
+        <View style={{
+            flex: 1, justifyContent: 'space-evenly', paddingTop: StatusBar.currentHeight,
+            marginHorizontal: 32
+        }}>
             <SectionList
                 sections={MENU}
                 renderItem={({item}) =>(Item(item)) }
-                renderSectionHeader={({section}) => (<Text style={styles.title}>{section.title}</Text>)}
+                renderSectionHeader={({section}) => (<Text style={{...styles.title,color: colors.text}}>{section.title}</Text>)}
                 keyExtractor={(item, index) => item.label + index}
             />
-          
         </View>
     )
 }
@@ -106,11 +110,8 @@ const styles = StyleSheet.create({
         marginVertical: 1
     },
     critical: {
-        color:'#770000',        
-    },
-    switch: {
-        backgroundColor: "#1b7931",
-        alignSelf:"flex-end"
+        fontSize: 16,
+        color:'#c70c28',
     },
     title: {
         marginTop: 20,

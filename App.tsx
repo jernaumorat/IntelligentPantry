@@ -34,7 +34,7 @@ const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
   // create the state var and set func
-    const [devMode, setDevMode] = useState('true')
+    const [devMode, setDevMode] = useState(true)
     const scheme = useColorScheme();
   useEffect(() => {
     SplashScreen.hide()
