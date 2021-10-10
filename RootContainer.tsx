@@ -16,8 +16,6 @@ const RootContainer = () => {
         (async () => {
             setFRFlow(await StorageManager.getFirstRun())
         })()
-
-        SplashScreen.hide()
     }, [])
 
     return firstRunFlow ? <FirstRunApp endFR={endFR} /> : <App />

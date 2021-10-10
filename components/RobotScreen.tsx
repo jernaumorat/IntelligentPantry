@@ -1,40 +1,34 @@
 import React, {
-    useEffect,
+    useLayoutEffect,
     useState
 } from 'react';
 
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
     View,
     KeyboardAvoidingView,
     Image,
-    RefreshControl,
-    Button,
-    TextInput,
     TouchableWithoutFeedback,
     Keyboard,
-    Pressable,
-    TouchableHighlight,
-    TouchableOpacity,
 } from 'react-native';
 
 import { RobotPreset } from './RobotPresets';
 import { RobotControls } from './RobotControl';
 import { RobotCoordinate } from './RobotCoordinate';
-import { Coords, NetworkManager } from '../NetworkManager';
+import { Coords, DEFAULT_URL } from '../NetworkManager';
 import { StorageManager } from '../StorageManager';
 
 export const RobotScreen = (props: any): JSX.Element => {
-    const [imgUri, setImgUri] = useState('http://place.holder.localhost')
+    const [imgSrc, setImgSrc] = useState({ uri: DEFAULT_URL, headers: { 'Authorization': 'Bearer ' } })
     const [coordState, setCoordState] = useState<Coords>({ x: 0, y: 0 })
     const updateCoords = (coords: Coords) => setCoordState(coords)
 
-    useEffect(() => { StorageManager.getURL().then(url => setImgUri(url + '/robot/camera')) }, [])
+    useLayoutEffect(() => {
+        StorageManager.getURL().then(url => {
+            StorageManager.getToken().then(tk => {
+                setImgSrc({ uri: url + '/robot/camera', headers: { 'Authorization': 'Bearer ' + tk } })
+            })
+        })
+    }, [])
 
     return (
         <KeyboardAvoidingView behavior={'position'}
@@ -42,7 +36,7 @@ export const RobotScreen = (props: any): JSX.Element => {
             style={{ flex: 1, width: '100%', height: '100%', flexDirection: 'column' }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
-                    <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: imgUri }} />
+                    <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ ...imgSrc }} />
                     <RobotPreset coords={coordState} setCoords={updateCoords} />
                     <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'space-evenly' }}>
                         <RobotControls coords={coordState} setCoords={updateCoords} />

@@ -20,8 +20,15 @@ import {
 import { StorageManager } from '../StorageManager'
 import { NetworkManager } from '../NetworkManager'
 import { ThemeSwitch } from './ThemeSwitch';
+import { useTheme } from '@react-navigation/native';
 
 export const SettingsScreen = (props: any): JSX.Element => {
+    const [token, setToken] = useState('')
+
+    useEffect(() => {
+        StorageManager.getToken().then(tk => setToken(tk))
+    }, [])
+
     // load props
     const devMode = props.devMode
     const setDevMode = props.setDevMode
@@ -46,6 +53,8 @@ export const SettingsScreen = (props: any): JSX.Element => {
             NetworkManager.postScan();
         }
         if (item == "Pair") {
+            StorageManager.setToken('');
+            StorageManager.getToken().then(tk => setToken(tk))
         }
         if (item == "Dev Mode") {
             setDevMode(!devMode);
@@ -60,6 +69,7 @@ export const SettingsScreen = (props: any): JSX.Element => {
             flex: 1, justifyContent: 'space-evenly', paddingTop: StatusBar.currentHeight,
             marginHorizontal: 32
         }}>
+            <Text style={{ color: useTheme().colors.text }}>{token}</Text>
             <SectionList
                 sections={DATA}
                 renderItem={({ item }) => <Text style={styles.item} onPress={() => onClickSetting(item)}>{item}</Text>}

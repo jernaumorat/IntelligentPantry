@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { DEFAULT_URL, PItem } from './NetworkManager'
+import { DEFAULT_URL, NetworkManager, PItem } from './NetworkManager'
 
 export namespace StorageManager {
     export const getPantryItems = async () => {
@@ -164,6 +164,8 @@ export namespace StorageManager {
     }
 
     export const resetDefault = async () => {
+        await NetworkManager.deleteToken()
+
         await setPantryItems([])
         await setURL(DEFAULT_URL)
         await setToken('')

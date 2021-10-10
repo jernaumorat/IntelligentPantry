@@ -6,6 +6,7 @@ import { NavigationContainer, DarkTheme, DefaultTheme, useTheme, useFocusEffect 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NetworkManager, DEFAULT_URL } from "./NetworkManager";
 import { StorageManager } from "./StorageManager";
+import SplashScreen from "react-native-splash-screen";
 
 const wait = (timeout: number): Promise<number> => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -192,6 +193,8 @@ const FRPair: React.FC<{ navigation: any }> = ({ navigation }) => {
 
                 if (code === null) { await wait(1500).then(navigation.navigate('Code')); return }
                 let token = await NetworkManager.getToken(code)
+                console.log("🚀 ~ file: FirstRunApp.tsx ~ line 196 ~ code", code)
+                console.log("🚀 ~ file: FirstRunApp.tsx ~ line 196 ~ token", token)
 
                 await StorageManager.setToken(token)
 
@@ -347,6 +350,10 @@ const FREnd: React.FC<{ navigation: any, endFR: () => void }> = ({ navigation, e
 }
 
 const FirstRunApp: React.FC<{ endFR: () => void }> = ({ endFR }) => {
+    useEffect(() => {
+        SplashScreen.hide()
+    }, [])
+
     return (
         <NavigationContainer theme={useColorScheme() == 'dark' ? DarkTheme : DefaultTheme}>
             <FRStack.Navigator>

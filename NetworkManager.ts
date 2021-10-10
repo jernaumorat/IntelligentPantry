@@ -38,20 +38,28 @@ export namespace NetworkManager {
 
     export const cameraUrl = async () => {
         let url = await StorageManager.getURL() + '/robot/camera'
+
         return url
     }
 
     export const getRoot = async () => {
-        let url = await StorageManager.getURL() + '/'
-        console.log("🚀 ~ file: NetworkManager.ts ~ line 46 ~ getRoot ~ url", url)
-        let res = await fetch(url)
+        let url = await StorageManager.getURL()
+
+        let res = await fetch(url + '/', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
         return await res.json()
     }
 
     export const getPairingCode = async () => {
         let url = await StorageManager.getURL() + '/pair'
         let bearer = await StorageManager.getToken()
-        let res
+        let res: Response
+
         if (bearer) {
             res = await fetch(url, {
                 method: 'POST',
@@ -64,24 +72,33 @@ export namespace NetworkManager {
         } else {
             res = await fetch(url)
         }
-
         let code = await res.json()
+
         return code
     }
 
     export const getToken = async (code: string) => {
-        let url = await StorageManager.getURL() + '/pair'
-        let res = await fetch(url + '?code=' + code)
+        let url = await StorageManager.getURL()
+        let res = await fetch(url + '/pair?code=' + code)
 
         let token = await res.json()
+
         return token
     }
 
     export const getPantryItems = async () => {
         let pitems: PItem[];
         let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
 
-        const res = await fetch(url + '/pantry/');
+        const res = await fetch(url + '/pantry/', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            }
+        })
         pitems = await res.json();
 
         for (let item of pitems) {
@@ -94,8 +111,16 @@ export namespace NetworkManager {
     export const getPantryDetail = async (id: number) => {
         let pitem: PDetail;
         let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
 
-        const res = await fetch(url + '/pantry/' + id);
+        const res = await fetch(url + '/pantry/' + id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            }
+        })
         pitem = await res.json();
 
         pitem.coords = { x: pitem.x, y: pitem.y }
@@ -106,8 +131,17 @@ export namespace NetworkManager {
 
     export const getPresets = async () => {
         let presets: Preset[];
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
 
-        const res = await fetch(await StorageManager.getURL() + '/robot/presets');
+        const res = await fetch(url + '/robot/presets', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            }
+        })
         presets = await res.json();
 
         for (let item of presets) {
@@ -119,19 +153,32 @@ export namespace NetworkManager {
 
     export const getStatus = async () => {
         let status: Status;
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
 
-        const res = await fetch(await StorageManager.getURL() + '/robot/status');
+        const res = await fetch(url + '/robot/status', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            }
+        })
         status = await res.json();
 
         return status;
     }
 
     export const postPreset = async (preset: Preset) => {
-        const res = await fetch(await StorageManager.getURL() + '/robot/presets', {
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
+
+        const res = await fetch(url + '/robot/presets', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
             },
             body: JSON.stringify({ label: preset.label, preset_x: preset.coords.x, preset_y: preset.coords.y })
         })
@@ -146,30 +193,64 @@ export namespace NetworkManager {
     }
 
     export const postCoords = async (coords: Coords) => {
-        const res = await fetch(await StorageManager.getURL() + '/robot/control', {
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
+
+        const res = await fetch(url + '/robot/control', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
             },
             body: JSON.stringify({ x: coords.x, y: coords.y })
         });
+
         return res.status === 200;
     }
 
     export const postScan = async () => {
-        const res = await fetch(await StorageManager.getURL() + '/robot/scan', {
-            method: 'POST'
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
+
+        const res = await fetch(url + '/robot/scan', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            },
         });
+
         return res.status === 200;
     }
 
     export const deletePreset = async (preset: Preset) => {
-        const res = await fetch(await StorageManager.getURL() + '/robot/presets/' + preset.presetId, {
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
+
+        const res = await fetch(url + '/robot/presets/' + preset.presetId, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
+            }
+        })
+
+        return res.status === 200;
+    }
+
+    export const deleteToken = async () => {
+        let url = await StorageManager.getURL()
+        let bearer = await StorageManager.getToken()
+
+        const res = await fetch(url + '/pair', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + bearer
             }
         })
 

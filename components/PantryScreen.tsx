@@ -94,7 +94,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
       let labelchat = pItem.label.charAt(0);
       //Function to make sectioning - Take the first leter of the name and convert it to header
       if (header != labelchat) {
-        final.push(<Text style={{ backgroundColor: colors.card, color: colors.text, fontSize: 18, paddingStart: 5, paddingTop: 5 }}>{labelchat.toUpperCase()}</Text>);
+        final.push(<Text key={labelchat.toUpperCase()} style={{ backgroundColor: colors.card, color: colors.text, fontSize: 18, paddingStart: 5, paddingTop: 5 }}>{labelchat.toUpperCase()}</Text>);
         final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
           onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
         header = labelchat;
