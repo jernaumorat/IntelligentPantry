@@ -25,4 +25,4 @@ TODO
 - [ ] Unit test each endpoint/method
 - [ ] Correctly handle all failure cases with HTTP codes, not just failing with 500s. (And success cases, 201 204 etc not just 200)
 - [ ] Add commands to add/delete test items
-- [ ] Zeroconf
+- [X] Zeroconf
