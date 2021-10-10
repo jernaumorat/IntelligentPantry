@@ -10,7 +10,7 @@ TODO
   - [X] `/robot/control` POST (stub until robot ready)
   - [ ] `/robot/camera` POST
   - [ ] `/pantry/` POST (update to handle bulk data)
-  - [ ] `/pantry` DELETE
+  - [X] `/pantry` DELETE
 - [x] Update database models to reflect client changes
   - [x] Remove Audit/reciept model
   - [x] Add x/y coords to item model
@@ -25,4 +25,4 @@ TODO
 - [ ] Unit test each endpoint/method
 - [ ] Correctly handle all failure cases with HTTP codes, not just failing with 500s. (And success cases, 201 204 etc not just 200)
 - [ ] Add commands to add/delete test items
-- [ ] Zeroconf
+- [X] Zeroconf
