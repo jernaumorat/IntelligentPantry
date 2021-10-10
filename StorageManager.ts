@@ -40,7 +40,7 @@ export namespace StorageManager {
             let data = await AsyncStorage.getItem('@url');
             if (data) {
                 try {
-                    return JSON.parse(data) as { http: string, https: string }
+                    return JSON.parse(data) as string
                 } catch (e) {
                     await setURL(DEFAULT_URL)
                     console.log(e)
@@ -56,7 +56,7 @@ export namespace StorageManager {
         }
     }
 
-    export const setURL = async (url: { http: string, https: string }) => {
+    export const setURL = async (url: string) => {
         try {
             let json = JSON.stringify(url)
             await AsyncStorage.setItem('@url', json)

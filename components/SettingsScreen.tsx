@@ -26,9 +26,9 @@ import { ThemeSwitch } from './ThemeSwitch';
 export const SettingsScreen = (props: any): JSX.Element => {
     // load props
     const devMode = props.devMode
-    const setDevMode = props.setDevMode    
+    const setDevMode = props.setDevMode
     //function called on devmode click. sets devMode prop for app.tsx to remove nav item
-    const onClickDevMode = ()=> {
+    const onClickDevMode = () => {
         setDevMode(!devMode);
     }
     // Menu item Strings
@@ -80,16 +80,20 @@ export const SettingsScreen = (props: any): JSX.Element => {
         </View>
         </TouchableOpacity>
       );
+
     return (
-        <View style={{ flex: 1, justifyContent: 'space-evenly',paddingTop: StatusBar.currentHeight,
-        marginHorizontal: 32 }}>
+        <View style={{
+            flex: 1, justifyContent: 'space-evenly', paddingTop: StatusBar.currentHeight,
+            marginHorizontal: 32
+        }}>
             <SectionList
                 sections={MENU}
                 renderItem={({item}) =>(Item(item)) }
                 renderSectionHeader={({section}) => (<Text style={styles.title}>{section.title}</Text>)}
                 keyExtractor={(item, index) => item.label + index}
+
             />
-          
+
         </View>
     )
 }

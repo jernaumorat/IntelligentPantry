@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { ActivityIndicator, GestureResponderEvent, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableNativeFeedback, TouchableOpacity, useColorScheme, View } from "react-native";
+import { ActivityIndicator, GestureResponderEvent, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableNativeFeedback, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from "react-native";
 
-import { NavigationContainer, DarkTheme, DefaultTheme, useTheme } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme, DefaultTheme, useTheme, useFocusEffect } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NetworkManager } from "./NetworkManager";
+import { NetworkManager, DEFAULT_URL } from "./NetworkManager";
 import { StorageManager } from "./StorageManager";
 
 const wait = (timeout: number): Promise<number> => {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const FRNextButton: React.FC<{ navCallback: (e: GestureResponderEvent) => void, last: boolean, disabled: boolean, style?: object }> = ({ navCallback, last, disabled, style }) => {
+const FRNextButton: React.FC<{ navCallback: (e: GestureResponderEvent) => void, last?: boolean, disabled?: boolean, indicator?: boolean, style?: object }> = ({ navCallback, last, disabled, indicator, style }) => {
     return (
         <TouchableOpacity style={[{
             borderRadius: 10,
@@ -63,7 +63,9 @@ const FRNextButton: React.FC<{ navCallback: (e: GestureResponderEvent) => void, 
         }, style]}
             onPress={navCallback}
             disabled={disabled}>
-            <Text style={{ fontSize: 24 }}>{last ? 'Finish' : 'Next'}</Text>
+            {indicator ?
+                <ActivityIndicator color={'white'} size='large' /> :
+                <Text style={{ fontSize: 24 }}>{last ? 'Finish' : 'Next'}</Text>}
         </TouchableOpacity>
     )
 }
@@ -170,18 +172,24 @@ const FRWelcome: React.FC<{ navigation: any }> = ({ navigation }) => {
                 </Text>
             </View>
             <View style={styles.FRFooter}>
-                <FRNextButton navCallback={(_) => { navigation.navigate('Pair') }} last={false} disabled={false} />
+                <FRNextButton navCallback={(_) => { navigation.navigate('Pair') }} />
             </View>
         </View>
     )
 }
 
 const FRPair: React.FC<{ navigation: any }> = ({ navigation }) => {
-    useEffect(() => {
+    useFocusEffect(() => {
         (async () => {
             if (await StorageManager.getToken() !== '') { await wait(1500).then(navigation.navigate('End')); return }
             try {
-                let code = await NetworkManager.getPairingCode()
+                let code = await (() => {
+                    return Promise.race([
+                        NetworkManager.getPairingCode(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+                    ])
+                })()
+
                 if (code === null) { await wait(1500).then(navigation.navigate('Code')); return }
                 let token = await NetworkManager.getToken(code)
 
@@ -233,24 +241,89 @@ const FRCode: React.FC<{ navigation: any }> = ({ navigation }) => {
 }
 
 const FRNetwork: React.FC<{ navigation: any }> = ({ navigation }) => {
+    const colors = useTheme().colors
+
     const [disabled, setDisabled] = useState(false)
+    const [indicator, setIndicator] = useState(false)
+    const [failed, setFailed] = useState(false)
+    const [IPText, setIPText] = useState('')
+    const [portText, setPortText] = useState('5000')
+
+    const validateNetwork = async () => {
+        setFailed(false)
+        setDisabled(true)
+        setIndicator(true)
+        try {
+            await StorageManager.setURL('http://' + IPText + ':' + portText)
+            await (() => {
+                return Promise.race([
+                    NetworkManager.getRoot(),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+                ])
+            })()
+            await wait(1500).then(() => navigation.navigate('Pair'))
+        } catch (e) {
+            console.log(e)
+            StorageManager.setURL(DEFAULT_URL)
+            await wait(1500).then(() => setFailed(true))
+        }
+        setDisabled(false)
+        setIndicator(false)
+    }
 
     return (
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-            <View style={styles.FRHeader}>
-                <Text style={{ ...styles.FRTitleText, color: useTheme().colors.text }}>
-                    We were unable to automatically detect your Intelligent Pantry Appliance.{`\n`}
-                    Please ensure it is connected to power and your home network, or enter the
-                    network details of the appliance below:
-                </Text>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+                <View style={{ ...styles.FRHeader, flex: 3 }}>
+                    <Text style={{ ...styles.FRTitleText, color: colors.text }}>
+                        We were unable to automatically detect your Intelligent Pantry Appliance.{`\n\n`}
+                        Please ensure it is connected to power and your home network, or enter the
+                        network details of the appliance below:
+                    </Text>
+                </View>
+                <View style={{ ...styles.FRBody, flex: 6 }}>
+                    <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+                        <Text style={{ ...styles.FRTitleText, fontSize: 20, color: colors.text, marginBottom: 20 }}>IP Address</Text>
+                        <TextInput
+                            style={{
+                                width: '80%',
+                                height: 70,
+                                fontSize: 50,
+                                textAlign: 'center',
+                                borderColor: failed ? 'red' : colors.border,
+                                borderWidth: 2,
+                                color: colors.text,
+                                backgroundColor: colors.card,
+                            }}
+                            keyboardType={'numeric'}
+                            maxLength={15}
+                            value={IPText}
+                            onChangeText={setIPText} />
+                    </View>
+                    <View style={{ flex: 2, width: '100%', alignItems: 'center' }}>
+                        <Text style={{ ...styles.FRTitleText, fontSize: 20, color: colors.text, marginBottom: 20 }}>Port</Text>
+                        <TextInput
+                            style={{
+                                width: '40%',
+                                height: 70,
+                                fontSize: 50,
+                                textAlign: 'center',
+                                borderColor: failed ? 'red' : colors.border,
+                                borderWidth: 2,
+                                color: colors.text,
+                                backgroundColor: colors.card,
+                            }}
+                            keyboardType={'numeric'}
+                            maxLength={5}
+                            value={portText}
+                            onChangeText={setPortText} />
+                    </View>
+                </View>
+                <View style={styles.FRFooter}>
+                    <FRNextButton navCallback={(_) => { validateNetwork() }} disabled={disabled} indicator={indicator} />
+                </View>
             </View>
-            <View style={styles.FRBody}>
-
-            </View>
-            <View style={styles.FRFooter}>
-                <FRNextButton navCallback={(_) => { navigation.navigate('End') }} last={false} disabled={disabled} />
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -267,7 +340,7 @@ const FREnd: React.FC<{ navigation: any, endFR: () => void }> = ({ navigation, e
 
             </View>
             <View style={styles.FRFooter}>
-                <FRNextButton navCallback={(_) => { endFR() }} last={true} disabled={false} />
+                <FRNextButton navCallback={(_) => { endFR() }} last={true} />
             </View>
         </View>
     )
