@@ -34,7 +34,7 @@ export const RobotScreen = (props: any): JSX.Element => {
     const [coordState, setCoordState] = useState<Coords>({ x: 0, y: 0 })
     const updateCoords = (coords: Coords) => setCoordState(coords)
 
-    useEffect(() => { StorageManager.getURL().then(url => setImgUri(url.https + '/robot/camera')) }, [])
+    useEffect(() => { StorageManager.getURL().then(url => setImgUri(url + '/robot/camera')) }, [])
 
     return (
         <KeyboardAvoidingView behavior={'position'}

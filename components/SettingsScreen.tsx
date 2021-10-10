@@ -93,6 +93,7 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 renderItem={({item}) =>(Item(item)) }
                 renderSectionHeader={({section}) => (<Text style={{...styles.title,color: colors.text}}>{section.title}</Text>)}
                 keyExtractor={(item, index) => item.label + index}
+
             />
         </View>
     )
