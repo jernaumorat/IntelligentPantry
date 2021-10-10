@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask.helpers import send_from_directory
-
+import requests
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 import os
@@ -25,9 +25,8 @@ def get_presets():
 
 @bp.route('/presets', methods=['POST'])
 def add_preset():
-    payload = loads(request.form.get('payload'))
-    new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])
-
+    payload = request.get_json()
+    new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])    
     db.session.add(new_item)
     db.session.commit()
 
@@ -51,19 +50,23 @@ def delete_preset(presetID):
 def call_position():
     payload = request.get_json()
     print(payload['x'], payload['y'])
+    url ='http://127.0.0.1:5050/moveTo'
+    response = requests.post(url,json=payload)
     
-    resp = jsonify(payload)
-    
-    return resp
+    return response.text
 
 @bp.route('/camera', methods=['GET'])
 def get_image():
-    response = send_from_directory(os.path.join('.', 'static'), 'camera.jpg')
-    response.headers.set('Cache-Control', 'max-age=86400')
+    response = send_from_directory(os.path.join('..', 'static'), 'camera.jpg')    
+    response.headers.set('Content-Type', 'image/jpeg')
+    response.headers.set('Cache-Control', 'max-age=0')
     response.headers.remove('Content-Disposition')
     response.headers.remove('Last-Modified')
     return response
 
 @bp.route('/camera', methods=['POST'])
 def put_image():
-    pass
+    img_file = request.files['image']
+    img_file.save(os.path.join('.', 'static', 'camera.jpg'))
+    resp = jsonify('OK')
+    return resp
