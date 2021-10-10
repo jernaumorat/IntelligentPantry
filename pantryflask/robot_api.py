@@ -58,7 +58,7 @@ def call_position():
 
 @bp.route('/camera', methods=['GET'])
 def get_image():
-    response = send_from_directory(os.path.join('../'), 'camera.jpg')    
+    response = send_from_directory(os.path.join('..', 'static'), 'camera.jpg')    
     response.headers.set('Content-Type', 'image/jpeg')
     response.headers.set('Cache-Control', 'max-age=0')
     response.headers.remove('Content-Disposition')
@@ -68,7 +68,7 @@ def get_image():
 @bp.route('/camera', methods=['POST'])
 def put_image():
     img_file = request.files['image']
-    img_file.save('camera.jpg')
+    img_file.save(os.path.join('.', 'static', 'camera.jpg'))
     resp = jsonify('OK')
     return resp
 
