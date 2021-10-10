@@ -1,16 +1,18 @@
+import requests, os
 from flask import Blueprint, jsonify, request, make_response
 from flask.helpers import send_from_directory
-import requests
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
-import os
+from json import loads
+
 from pantryflask.db import db
 from pantryflask.models import RobotPreset
-from json import loads
+from pantryflask.auth import token_auth
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
 @bp.route('/presets', methods=['GET'])
+@token_auth.login_required(role=['user'])
 def get_presets():
     data = []
     for item in RobotPreset.query.all():
@@ -22,8 +24,8 @@ def get_presets():
     
     return resp
     
-
 @bp.route('/presets', methods=['POST'])
+@token_auth.login_required(role=['user'])
 def add_preset():
     payload = request.get_json()
     new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])    
@@ -36,6 +38,7 @@ def add_preset():
     return resp, 201
 
 @bp.route('/presets/<int:presetID>', methods=['DELETE'])
+@token_auth.login_required(role=['user'])
 def delete_preset(presetID):
     item = RobotPreset.query.get_or_404(presetID)
 
@@ -47,6 +50,7 @@ def delete_preset(presetID):
     return resp
 
 @bp.route('/control', methods=['POST'])
+@token_auth.login_required(role=['user'])
 def call_position():
     payload = request.get_json()
     print(payload['x'], payload['y'])
@@ -56,6 +60,7 @@ def call_position():
     return response.text
 
 @bp.route('/camera', methods=['GET'])
+@token_auth.login_required(role=['user'])
 def get_image():
     response = send_from_directory(os.path.join('..', 'static'), 'camera.jpg')    
     response.headers.set('Content-Type', 'image/jpeg')
@@ -65,6 +70,7 @@ def get_image():
     return response
 
 @bp.route('/camera', methods=['POST'])
+@token_auth.login_required(role=['system'])
 def put_image():
     img_file = request.files['image']
     img_file.save(os.path.join('.', 'static', 'camera.jpg'))
