@@ -54,11 +54,7 @@ def app_factory(config={}):
 
     @app.route('/pair', methods=['GET'])
     def pair_device():
-        if len(AuthToken.query.filter_by(token_class='user').all()) == 0:
-            return jsonify(generate_pairing_code())
-
         code = request.args.get('code')
-        if code == None: return jsonify(None), 401
         if len(AuthToken.query.filter_by(token_class='user').all()) == 0 and not code:
             return jsonify(generate_pairing_code())
 
@@ -77,6 +73,7 @@ def app_factory(config={}):
     @token_auth.login_required(role=['user'])
     def delete_token():
         token = request.headers.get('Authorization')
+        print(token)
         token = token.split(' ')[1]
         db.session.delete(AuthToken.query.get(token))
         db.session.commit()
