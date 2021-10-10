@@ -1,10 +1,7 @@
 import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
 import { StorageManager } from "./StorageManager";
 
-export const DEFAULT_URL = {
-    http: 'http://intpantry._http._tcp.local:5000',
-    https: 'http://intpantry._http._tcp.local:5000'
-}
+export const DEFAULT_URL = 'http://intpantry._http._tcp.local:5000'
 
 export interface Coords {
     x: number,
@@ -40,12 +37,19 @@ export interface Status {
 export namespace NetworkManager {
 
     export const cameraUrl = async () => {
-        let url = (await StorageManager.getURL()).https + '/robot/camera'
+        let url = await StorageManager.getURL() + '/robot/camera'
         return url
     }
 
+    export const getRoot = async () => {
+        let url = await StorageManager.getURL() + '/'
+        console.log("🚀 ~ file: NetworkManager.ts ~ line 46 ~ getRoot ~ url", url)
+        let res = await fetch(url)
+        return await res.json()
+    }
+
     export const getPairingCode = async () => {
-        let url = (await StorageManager.getURL()).http + '/pair'
+        let url = await StorageManager.getURL() + '/pair'
         let bearer = await StorageManager.getToken()
         let res
         if (bearer) {
@@ -66,7 +70,7 @@ export namespace NetworkManager {
     }
 
     export const getToken = async (code: string) => {
-        let url = (await StorageManager.getURL()).http + '/pair'
+        let url = await StorageManager.getURL() + '/pair'
         let res = await fetch(url + '?code=' + code)
 
         let token = await res.json()
@@ -75,7 +79,7 @@ export namespace NetworkManager {
 
     export const getPantryItems = async () => {
         let pitems: PItem[];
-        let url = (await StorageManager.getURL()).https
+        let url = await StorageManager.getURL()
 
         const res = await fetch(url + '/pantry/');
         pitems = await res.json();
@@ -89,7 +93,7 @@ export namespace NetworkManager {
 
     export const getPantryDetail = async (id: number) => {
         let pitem: PDetail;
-        let url = (await StorageManager.getURL()).https
+        let url = await StorageManager.getURL()
 
         const res = await fetch(url + '/pantry/' + id);
         pitem = await res.json();
@@ -103,7 +107,7 @@ export namespace NetworkManager {
     export const getPresets = async () => {
         let presets: Preset[];
 
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/presets');
+        const res = await fetch(await StorageManager.getURL() + '/robot/presets');
         presets = await res.json();
 
         for (let item of presets) {
@@ -116,14 +120,14 @@ export namespace NetworkManager {
     export const getStatus = async () => {
         let status: Status;
 
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/status');
+        const res = await fetch(await StorageManager.getURL() + '/robot/status');
         status = await res.json();
 
         return status;
     }
 
     export const postPreset = async (preset: Preset) => {
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/presets', {
+        const res = await fetch(await StorageManager.getURL() + '/robot/presets', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -142,7 +146,7 @@ export namespace NetworkManager {
     }
 
     export const postCoords = async (coords: Coords) => {
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/control', {
+        const res = await fetch(await StorageManager.getURL() + '/robot/control', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -154,14 +158,14 @@ export namespace NetworkManager {
     }
 
     export const postScan = async () => {
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/scan', {
+        const res = await fetch(await StorageManager.getURL() + '/robot/scan', {
             method: 'POST'
         });
         return res.status === 200;
     }
 
     export const deletePreset = async (preset: Preset) => {
-        const res = await fetch((await StorageManager.getURL()).https + '/robot/presets/' + preset.presetId, {
+        const res = await fetch(await StorageManager.getURL() + '/robot/presets/' + preset.presetId, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
