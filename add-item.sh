@@ -13,7 +13,7 @@ echo $IMAGE
 echo $X
 echo $Y
 
-PAYLOAD='{"label":"'$LABEL'","quantity":"'$QUANT'","item_x":"'$X'","item_y":"'$Y'"}'
+PAYLOAD='[{"label":"'$LABEL'","quantity":"'$QUANT'","item_x":"'$X'","item_y":"'$Y'","image_key":"'$IMAGE'"}]'
 
 echo $PAYLOAD
 curl -vv -X POST -F "payload=$PAYLOAD" -F "image=@$IMAGE" $URL

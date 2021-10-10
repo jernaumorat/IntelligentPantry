@@ -7,6 +7,7 @@ from zeroconf import ServiceInfo, Zeroconf
 
 from pantryflask.config import FlaskConfig
 from pantryflask.auth import token_auth, generate_pairing_code, generate_user_token
+from pantryflask.models import AuthToken
 from pantryflask.db import db
 from pantryflask.pantry_api import bp as pantry_bp
 from pantryflask.robot_api import bp as robot_bp
@@ -36,6 +37,10 @@ def app_factory(config={}):
     @app.route('/pair', methods=['GET'])
     def pair_device():
         code = request.args.get('code')
+        if code == None: return jsonify(None), 401
+        if len(AuthToken.query.filter_by(token_class='user').all()) == 0 and not code:
+            return jsonify(generate_pairing_code())
+
         token = generate_user_token(code)
         if token == None:
             return jsonify(None), 401
@@ -46,6 +51,16 @@ def app_factory(config={}):
     @token_auth.login_required(role=['user'])
     def get_pairing_code():
         return jsonify(generate_pairing_code)
+
+    @app.route('/pair', methods=['DELETE'])
+    @token_auth.login_required(role=['user'])
+    def delete_token():
+        token = request.headers.get('Authorization')
+        token = token.split(' ')[1]
+        db.session.delete(AuthToken.query.get(token))
+        db.session.commit()
+        
+        return jsonify('OK')
 
     app.register_blueprint(pantry_bp)
     app.register_blueprint(robot_bp)

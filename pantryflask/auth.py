@@ -1,6 +1,7 @@
 # informed greatly by https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 import secrets
 import string
+import datetime
 
 from flask import jsonify
 from flask_httpauth import HTTPTokenAuth
@@ -13,7 +14,7 @@ from pantryflask.models import AuthToken, PairingCode
 token_auth = HTTPTokenAuth(scheme='bearer')
 
 def generate_pairing_code():
-    code = ''.join(secrets.choice(string.ascii_uppercase) for i in range(4))
+    code = ''.join(secrets.choice(string.digits) for i in range(4))
     db.session.add(PairingCode(pair_code=code))
     db.session.commit()
 
@@ -22,6 +23,11 @@ def generate_pairing_code():
 def generate_user_token(code):
     c = PairingCode.query.get(code)
     if c == None:
+        return None
+    
+    if c.pair_expiry < datetime.datetime.now():
+        db.session.delete(c)
+        db.session.commit()
         return None
 
     token = secrets.token_hex(32)
