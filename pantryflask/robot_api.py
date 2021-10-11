@@ -8,6 +8,7 @@ from pantryflask.db import db
 from pantryflask.models import RobotPreset
 from pantryflask.models import SystemStatus
 from json import loads
+from datetime import datetime
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
@@ -72,30 +73,29 @@ def put_image():
     resp = jsonify('OK')
     return resp
 
-# To implement status GET endpoint 
+# Send status to app
 @bp.route('/status', methods=['GET'])
 def get_status():
-    status = SystemStatus.query.get_or_404()
-    resp = jsonify(status.to_dict())
-    return resp
+    # status = SystemStatus.query.get_or_404((SystemStatus).order_by(SystemStatus.status_time.desc().first()))
+    # status = db.session.query(SystemStatus).order_by(SystemStatus.status_time.desc().first())
+    status = SystemStatus.query.order_by(SystemStatus.status_time.desc()).first()
 
-# Update database
-@bp.route('/status', methods=['POST'])
-def update_status(status_time):
-    status = SystemStatus.query.get_or_404(status_time)
-    url ='http://127.0.0.1:5050/status'
-    db.session()
-    db.commit()
-    # Send back to robostub
-    resp = jsonify 
-    # requests.post(url+'/status', payload = request.get_json())
+    # db.session.query((SystemStatus).filter(SystemStatus.status_time == db.session.query(func.max(SystemStatus.status_time))
+    resp = jsonify(status=datetime.now())
     return resp, 200
 
-    # resp = jsonify(data)
-    # if data == []:
-    #     return resp, 204
-    
-    # return resp
+# Update database with status
+@bp.route('/status', methods=['POST'])
+def update_status():
+    payload = request.get_json()
+    status_update = SystemStatus(status_state=payload['payload'])
+    db.session.add(status_update)
+    db.session.commit()
+    # Send back to robostub
+    resp = jsonify("OK")
+    return resp, 201
+    # resp = jsonify(new_item.to_dict())
+    # resp.headers.set('Location', f'{request.base_url}{status.status_time}')
 
 @bp.route('/scan', methods=['POST'])
 def start_scan(status_time):

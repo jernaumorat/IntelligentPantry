@@ -73,11 +73,11 @@ def get_item_image(itemID):
 
     return resp
 
-@bp.route('/<int:itemID>', methods=['DELETE'])
-def delete_item(itemID):
-    item = PantryItem.query.get_or_404(itemID)
-    db.session.delete(item)
-    db.session.commit()
+@bp.route('/delete', methods=['DELETE'])
+def delete_allitems():
+    for items in PantryItem.query.all():
+        db.session.delete(items)
+        db.session.commit()
     
     resp = jsonify("OK")
 
