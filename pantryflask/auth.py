@@ -40,7 +40,7 @@ def generate_user_token(code):
 def generate_system_token(token):
     if token == "generate":
         token = secrets.token_hex(32)
-    db.session.add(AuthToken(token_data=token, token_class='system'))
+    db.session.add(AuthToken(token_birth=datetime.now(), token_data=token, token_class='system'))
     db.session.commit()
 
     return token

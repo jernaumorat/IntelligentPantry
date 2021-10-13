@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a464538db648
+Revision ID: 8db7178362d0
 Revises: 
-Create Date: 2021-09-23 13:44:52.736824
+Create Date: 2021-10-13 23:14:41.474086
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a464538db648'
+revision = '8db7178362d0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,7 +36,8 @@ def upgrade():
     sa.Column('item_quantity', sa.Integer(), nullable=False),
     sa.Column('item_x', sa.Integer(), nullable=False),
     sa.Column('item_y', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('item_id')
+    sa.PrimaryKeyConstraint('item_id'),
+    sqllite_autoincrement=True
     )
     op.create_index(op.f('ix_pantry_item_item_label'), 'pantry_item', ['item_label'], unique=False)
     op.create_index(op.f('ix_pantry_item_item_quantity'), 'pantry_item', ['item_quantity'], unique=False)
@@ -45,7 +46,8 @@ def upgrade():
     sa.Column('preset_label', sa.String(), nullable=True),
     sa.Column('preset_x', sa.Integer(), nullable=False),
     sa.Column('preset_y', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('preset_id')
+    sa.PrimaryKeyConstraint('preset_id'),
+    sqllite_autoincrement=True
     )
     op.create_table('system_status',
     sa.Column('status_time', sa.DateTime(), nullable=False),
