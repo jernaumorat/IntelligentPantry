@@ -7,10 +7,7 @@ import requests
 import random
 # Default values
 
-width =1200
-height = 800
-BLUE =      (0,   0, 255)
-BLACK =      (0,   0, 0)
+URL = 'http://192.168.1.17:5000/'
 class PyBot(Bot):   
     VIEW_WIDTH  = 600
     VIEW_HIEGHT = 400    
@@ -45,7 +42,7 @@ class PyBot(Bot):
         # }
         # response = requests.request("POST", url, files=files, headers=headers)
         # Need to move this hard coded address out into a env_var file
-        response = requests.post('http://192.168.1.55:5000/:5000/robot/camera', files=files)
+        response = requests.post(URL+'robot/camera', files=files)
 
         print(response.text)
         return "200"
@@ -85,7 +82,7 @@ class PyBot(Bot):
             files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
         payload = {'payload':json.dumps(dataList)}
         
-        response = requests.post('http://192.168.1.55:5000/pantry/', files=files,data=payload)
+        response = requests.post(URL+'pantry/', files=files,data=payload)
         
         # website that will return the request back in text. Very helpful in debugging and seeing the request
         response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
