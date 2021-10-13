@@ -15,7 +15,6 @@ app = Flask(__name__)
 def index():
     # payload = loads(request.form.get('payload'))
     payload = request.get_json()
-    print(payload)
     x = payload['x']
     y = payload['y']
     print("moveTo completed: 200")
@@ -37,8 +36,7 @@ def get_image():
 # endpoint to get status
 @app.route('/status',methods=['GET'])
 def get_status():
-    # bot.updateStatus()
-    resp = jsonify(bot.getStatus())
+    resp = jsonify(bot.updateStatus())
     return resp   
 
 # GET allows browser to trigger scan
@@ -50,4 +48,5 @@ def get_scan():
 
 if __name__ == "__main__":
     bot = PyBot(0, 0)
+    # bot.updateStatus()
     app.run(port=5050)
