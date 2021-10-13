@@ -14,10 +14,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {
-  Picker
-} from '@react-native-picker/picker';
-
 import { useTheme } from '@react-navigation/native';
 import { NetworkManager, PItem } from '../NetworkManager'
 import { StorageManager } from '../StorageManager';
@@ -47,8 +43,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   const [pStateFiltered, setpStateFiltered] = useState<PItem[]>([]);
   const [isRefreshing, setRefreshing] = useState(true)
   const [bearer, setBearer] = useState("");
-  const [searchtext, setSearchText] = useState("");
-  const [selectedValue, setSelectedValue] = useState("A-Z");
+  const [searchText, setSearchText] = useState("");
 
   const { colors } = useTheme();
 
@@ -66,51 +61,16 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
       setpStateFiltered(newData);
     } else {
       setpStateFiltered(pState);
-      setSearchText(text);
     }
-  };
-  const sortFilterFunction = (itemValue: string) => {
-    //function to sort data according to name and qty
-
-    if (itemValue === "Z-A") {
-      pStateFiltered.sort((a, b) => (a.label < b.label) ? 1 : -1);
-    } else if (itemValue === "A-Z") {
-      pStateFiltered.sort((a, b) => (a.label > b.label) ? 1 : -1);
-    } else if (itemValue === "ASC(Qty)") {
-      pStateFiltered.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
-    } else if (itemValue === "DESC(Qty)") {
-      pStateFiltered.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
-    }
-    setSelectedValue(itemValue);
   };
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
     const final = []
-    let header = "";
+
     for (let pItem of data) {
-      let labelchat = pItem.label.charAt(0);
-      //Function to make sectioning - Take the first leter of the name and convert it to header
-      if (header != labelchat) {
-        final.push(<Text key={'SECTION_' + labelchat.toUpperCase()}
-          style={{
-            backgroundColor: colors.card,
-            color: colors.text,
-            fontSize: 18,
-            paddingStart: 5,
-            paddingTop: 5
-          }}>
-          {labelchat.toUpperCase()}
-        </Text>);
-        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
-          onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
-        header = labelchat;
-      }
-      else {
-        //Else push items to the list
-        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
-          onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
-      }
+      final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
+        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
     }
 
     return final
@@ -164,25 +124,9 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
           }}
           placeholderTextColor='green'
           // onChangeText={setSearchText}
-          onChangeText={text => searchFilterFunction(text)}
-          value={searchtext}
+          onChangeText={text => { setSearchText(text); searchFilterFunction(text) }}
+          value={searchText}
         />
-        <Picker
-          selectedValue={selectedValue}
-          style={{
-            height: 40,
-            margin: 12,
-            borderWidth: 1,
-            padding: 10,
-            borderColor: "#000000",
-            width: "100%",
-          }}
-          onValueChange={itemValue => sortFilterFunction(itemValue)} >
-          <Picker.Item color={colors.primary} label="A-Z" value="A-Z" />
-          <Picker.Item color={colors.primary} label="Z-A" value="Z-A" />
-          <Picker.Item color={colors.primary} label="ASC" value="ASC(Qty)" />
-          <Picker.Item color={colors.primary} label="DESC" value="DESC(Qty)" />
-        </Picker>
       </View>
       {pItem_components}
     </ScrollView>
