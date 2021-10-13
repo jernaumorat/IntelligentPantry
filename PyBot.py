@@ -52,7 +52,7 @@ class PyBot(Bot):
         payload = {'status_payload':json.dumps(self.status)}
         
         response = requests.post(URL+'robot/status', json=payload)
-        response = requests.post('https://httpbin.org/post', json=payload)
+        # response = requests.post('https://httpbin.org/post', json=payload)
         # response = requests.get('https://httpbin.org/post', json=payload)
         print(response.text)
 
@@ -85,14 +85,14 @@ class PyBot(Bot):
         response = requests.post(URL+'pantry/', files=files,data=payload)
         
         # website that will return the request back in text. Very helpful in debugging and seeing the request
-        response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
+        # response = requests.post('https://httpbin.org/post',  files=files,data=payload)    
         # print(response.text)
         return 
     
     # Todo scan pantry    
     def scan(self):
         # inform server we are busy
-        self.status = 'busy'
+        self.status = 'scanning'
         # simulate busy
         self.updateStatus()
         # call delete database Endpoint

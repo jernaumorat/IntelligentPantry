@@ -48,5 +48,4 @@ def get_scan():
 
 if __name__ == "__main__":
     bot = PyBot(0, 0)
-    # bot.updateStatus()
     app.run(port=5050)
