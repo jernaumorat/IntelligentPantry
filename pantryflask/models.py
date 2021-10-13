@@ -44,7 +44,7 @@ class RobotPreset(db.Model):
 
 class PairingCode(db.Model):
     pair_code = db.Column(db.String, primary_key=True)
-    pair_expiry = db.Column(db.DateTime, default=datetime.now() + timedelta(hours=1), nullable=False)
+    pair_expiry = db.Column(db.DateTime, nullable=False)
 
     def to_dict(self):
         data = {
@@ -58,7 +58,7 @@ class PairingCode(db.Model):
 class AuthToken(db.Model):
     token_data = db.Column(db.String, primary_key=True)
     token_class = db.Column(db.String, nullable=False)
-    token_birth = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    token_birth = db.Column(db.DateTime, nullable=False)
 
     def to_dict(self):
         data = {

@@ -1,7 +1,7 @@
 # informed greatly by https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 import secrets
 import string
-import datetime
+from datetime import datetime, timedelta
 
 from flask import jsonify
 from flask_httpauth import HTTPTokenAuth
@@ -15,7 +15,7 @@ token_auth = HTTPTokenAuth(scheme='bearer')
 
 def generate_pairing_code():
     code = ''.join(secrets.choice(string.digits) for i in range(4))
-    db.session.add(PairingCode(pair_code=code))
+    db.session.add(PairingCode(pair_expiry=datetime.now() + timedelta(hours=1), pair_code=code))
     db.session.commit()
 
     return code
@@ -25,13 +25,13 @@ def generate_user_token(code):
     if c == None:
         return None
     
-    if c.pair_expiry < datetime.datetime.now():
+    if c.pair_expiry < datetime.now():
         db.session.delete(c)
         db.session.commit()
         return None
 
     token = secrets.token_hex(32)
-    db.session.add(AuthToken(token_data=token, token_class='user'))
+    db.session.add(AuthToken(token_birth=datetime.now(), token_data=token, token_class='user'))
     db.session.delete(c)
     db.session.commit()
 
