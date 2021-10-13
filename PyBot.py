@@ -45,7 +45,7 @@ class PyBot(Bot):
         # }
         # response = requests.request("POST", url, files=files, headers=headers)
         # Need to move this hard coded address out into a env_var file
-        response = requests.post('http://http://192.168.1.55:5000/:5000/robot/camera', files=files)
+        response = requests.post('http://192.168.1.55:5000/:5000/robot/camera', files=files)
 
         print(response.text)
         return "200"
@@ -55,7 +55,6 @@ class PyBot(Bot):
         payload = {'status_payload':json.dumps(self.status)}
         
         response = requests.post('http://192.168.1.55:5000/robot/status', json=payload)
-        response = requests.get('http://192.168.1.55:5000/robot/status', json=payload)
         response = requests.post('https://httpbin.org/post', json=payload)
         # response = requests.get('https://httpbin.org/post', json=payload)
         print(response.text)
@@ -100,7 +99,7 @@ class PyBot(Bot):
         # simulate busy
         self.updateStatus()
         # call delete database Endpoint
-        response = requests.delete('http://192.168.1.55:5000/pantry/delete')
+        response = requests.delete('http://192.168.1.55:5000/pantry/')
         self.sendItems()
         self.status = 'idle'
         self.updateStatus()
