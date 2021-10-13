@@ -37,10 +37,8 @@ def add_items():
         new_item = PantryItem(item_label=data['label'], item_quantity=data['quantity'], item_x=data['item_x'], item_y=data['item_y'], item_image=img.read())
         db.session.add(new_item)
     db.session.commit()
-    
-    resp = jsonify("OK")
-
-    return resp, 201
+    resp = payload
+    return "resp", 201
 
 @bp.route('/<int:itemID>', methods=['GET'])
 @token_auth.login_required(role=['user'])
@@ -62,12 +60,11 @@ def get_item_image(itemID):
 
     return resp
 
-@bp.route('/<int:itemID>', methods=['DELETE'])
-@token_auth.login_required(role=['system'])
-def delete_item(itemID):
-    item = PantryItem.query.get_or_404(itemID)
-    db.session.delete(item)
-    db.session.commit()
+@bp.route('/', methods=['DELETE'])
+def delete_allitems():
+    for item in PantryItem.query.all():
+        db.session.delete(item)
+        db.session.commit()
     
     resp = jsonify("OK")
 
