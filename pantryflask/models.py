@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from pantryflask.db import db
 
 class PantryItem(db.Model):
+    __tablename__ = 'pantryitem'
     __table_args__ = {'sqlite_autoincrement': True}
     item_id = db.Column(db.Integer, primary_key=True)
     item_label = db.Column(db.String, index=True, nullable=False)
@@ -28,6 +29,7 @@ class PantryItem(db.Model):
         return data
 
 class RobotPreset(db.Model):
+    __tablename__ = 'robotpreset'
     __table_args__ = {'sqlite_autoincrement': True}
     preset_id = db.Column(db.Integer, primary_key=True)
     preset_label = db.Column(db.String)
