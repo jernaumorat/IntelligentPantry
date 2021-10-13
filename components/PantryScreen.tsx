@@ -44,15 +44,14 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
   const [pState, setpState] = useState<PItem[]>([])
+  const [pStateFiltered, setpStateFiltered] = useState<PItem[]>([]);
   const [isRefreshing, setRefreshing] = useState(true)
-  const { colors } = useTheme();
+  const [bearer, setBearer] = useState("");
   const [searchtext, setSearchText] = useState("");
   const [selectedValue, setSelectedValue] = useState("A-Z");
-  const [filteredDataSource, setFilteredDataSource] = useState<PItem[]>([]);
 
-  const backgroundStyle = {
-    backgroundColor: colors.background
-  };
+  const { colors } = useTheme();
+
   const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
     if (text) {
@@ -64,10 +63,9 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
           const textData = text.toUpperCase();
           return itemData.indexOf(textData) > -1;
         });
-      setFilteredDataSource(newData);
-      setSearchText(text);
+      setpStateFiltered(newData);
     } else {
-      setFilteredDataSource(pState);
+      setpStateFiltered(pState);
       setSearchText(text);
     }
   };
@@ -75,13 +73,13 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     //function to sort data according to name and qty
 
     if (itemValue === "Z-A") {
-      filteredDataSource.sort((a, b) => (a.label < b.label) ? 1 : -1);
+      pStateFiltered.sort((a, b) => (a.label < b.label) ? 1 : -1);
     } else if (itemValue === "A-Z") {
-      filteredDataSource.sort((a, b) => (a.label > b.label) ? 1 : -1);
+      pStateFiltered.sort((a, b) => (a.label > b.label) ? 1 : -1);
     } else if (itemValue === "ASC(Qty)") {
-      filteredDataSource.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
+      pStateFiltered.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
     } else if (itemValue === "DESC(Qty)") {
-      filteredDataSource.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
+      pStateFiltered.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
     }
     setSelectedValue(itemValue);
   };
@@ -94,17 +92,25 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
       let labelchat = pItem.label.charAt(0);
       //Function to make sectioning - Take the first leter of the name and convert it to header
       if (header != labelchat) {
-        final.push(<Text key={labelchat.toUpperCase()} style={{ backgroundColor: colors.card, color: colors.text, fontSize: 18, paddingStart: 5, paddingTop: 5 }}>{labelchat.toUpperCase()}</Text>);
-        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
+        final.push(<Text key={'SECTION_' + labelchat.toUpperCase()}
+          style={{
+            backgroundColor: colors.card,
+            color: colors.text,
+            fontSize: 18,
+            paddingStart: 5,
+            paddingTop: 5
+          }}>
+          {labelchat.toUpperCase()}
+        </Text>);
+        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
           onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
         header = labelchat;
       }
       else {
         //Else push items to the list
-        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()}
+        final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
           onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
       }
-
     }
 
     return final
@@ -114,16 +120,17 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
     setRefreshing(true)
     let data = await StorageManager.getPantryItems();
     NetworkManager.getPantryItems().then(d => {
+      StorageManager.setPantryItems(d)
       data = d
-      StorageManager.setPantryItems(data)
     })
 
     setpState(data)
-    setFilteredDataSource(data);
+    setpStateFiltered(data)
+
     await wait(1000).then(() => { setRefreshing(false) })
   }
 
-  const pItem_components = filteredDataSource ? components_from_pitems(filteredDataSource) : []
+  const pItem_components = pStateFiltered ? components_from_pitems(pStateFiltered) : []
 
   /* useEffect(func, []) runs func when component is first loaded. 
      The return statement of func expects a callback or lambda, and is executed when the component is cleaned up.
@@ -133,15 +140,15 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
      We are only updating the state on user intervention at this time, so no dependancies are required here. */
   useEffect(() => {
     update_state()
-    setInterval(update_state, 60000)
+    StorageManager.getToken().then(tk => { setBearer(tk) })
     return () => {
       setRefreshing(false)
     }
   }, [])
-  //Added a TextInput for search and a Picker for sorting 
+
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic"
-      style={[backgroundStyle, { height: '100%' }]}
+      style={{ height: '100%', backgroundColor: colors.card }}
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}>
 
       <View style={{
@@ -157,7 +164,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
           }}
           placeholderTextColor='green'
           // onChangeText={setSearchText}
-          onChangeText={(text) => searchFilterFunction(text)}
+          onChangeText={text => searchFilterFunction(text)}
           value={searchtext}
         />
         <Picker
@@ -170,7 +177,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
             borderColor: "#000000",
             width: "100%",
           }}
-          onValueChange={(itemValue, _) => sortFilterFunction(itemValue)} >
+          onValueChange={itemValue => sortFilterFunction(itemValue)} >
           <Picker.Item color={colors.primary} label="A-Z" value="A-Z" />
           <Picker.Item color={colors.primary} label="Z-A" value="Z-A" />
           <Picker.Item color={colors.primary} label="ASC" value="ASC(Qty)" />
@@ -186,7 +193,7 @@ const PantryItem = (props: any): JSX.Element => {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={[PantryStyles.pantryItem]}>
-        <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri }} />
+        <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri, headers: { 'Authorization': 'Bearer ' + props.bearer } }} />
         <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, }]}>{props.itemLabel}</Text>
         <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, }]}>{props.itemQuant}</Text>
       </View>

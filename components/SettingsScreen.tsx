@@ -71,6 +71,7 @@ export const SettingsScreen = (props: any): JSX.Element => {
         }}>
             <Text style={{ color: useTheme().colors.text }}>{token}</Text>
             <SectionList
+                scrollEnabled={false}
                 sections={DATA}
                 renderItem={({ item }) => <Text style={styles.item} onPress={() => onClickSetting(item)}>{item}</Text>}
 

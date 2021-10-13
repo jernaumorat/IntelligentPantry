@@ -193,8 +193,6 @@ const FRPair: React.FC<{ navigation: any }> = ({ navigation }) => {
 
                 if (code === null) { await wait(1500).then(navigation.navigate('Code')); return }
                 let token = await NetworkManager.getToken(code)
-                console.log("🚀 ~ file: FirstRunApp.tsx ~ line 196 ~ code", code)
-                console.log("🚀 ~ file: FirstRunApp.tsx ~ line 196 ~ token", token)
 
                 await StorageManager.setToken(token)
 

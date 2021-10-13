@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import FirstRunApp from "./FirstRunApp";
 import App from "./App";
 import { StorageManager } from "./StorageManager";
@@ -12,7 +12,7 @@ const RootContainer = () => {
         StorageManager.setFirstRun(false)
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             setFRFlow(await StorageManager.getFirstRun())
         })()
