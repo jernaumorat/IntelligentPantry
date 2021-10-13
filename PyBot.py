@@ -51,7 +51,7 @@ class PyBot(Bot):
     def updateStatus(self):
         payload = {'status_payload':json.dumps(self.status)}
         
-        response = requests.post('http://192.168.1.55:5000/robot/status', json=payload)
+        response = requests.post(URL+'robot/status', json=payload)
         response = requests.post('https://httpbin.org/post', json=payload)
         # response = requests.get('https://httpbin.org/post', json=payload)
         print(response.text)
@@ -96,7 +96,7 @@ class PyBot(Bot):
         # simulate busy
         self.updateStatus()
         # call delete database Endpoint
-        response = requests.delete('http://192.168.1.55:5000/pantry/')
+        response = requests.delete(URL+'pantry/')
         self.sendItems()
         self.status = 'idle'
         self.updateStatus()
