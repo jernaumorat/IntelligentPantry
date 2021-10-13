@@ -87,12 +87,11 @@ def update_status():
     status_update = SystemStatus(status_time=datetime.now(), status_state=payload['status_payload'])
     db.session.add(status_update)
     db.session.commit()
-    resp = jsonify(payload)
-    resp.headers.set('Location', f'{request.base_url}{status_update.status_time}')
+    resp = jsonify("OK")
     return resp, 201
 
 @bp.route('/scan', methods=['POST'])
-def start_scan(status_time):
+def start_scan():
     url ='http://127.0.0.1:5050'
     resp = requests.post(url+'/scan', payload = request.get_json())
     return resp

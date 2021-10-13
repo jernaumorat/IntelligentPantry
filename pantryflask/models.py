@@ -70,7 +70,7 @@ class AuthToken(db.Model):
         return data
 
 class SystemStatus(db.Model):
-    status_time = db.Column(db.DateTime, primary_key=True, default=datetime.now())
+    status_time = db.Column(db.DateTime, primary_key=True)
     status_state = db.Column(db.String, nullable=False)
 
     def to_dict(self):
