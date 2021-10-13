@@ -51,7 +51,6 @@ def add_items():
         db.session.add(new_item)
     db.session.commit()
     resp = payload
-    resp.headers.set('Location', f'{request.base_url}')
     return "resp", 201
 
 @bp.route('/<int:itemID>', methods=['GET'])

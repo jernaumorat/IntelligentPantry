@@ -76,26 +76,20 @@ def put_image():
 # Send status to app
 @bp.route('/status', methods=['GET'])
 def get_status():
-    # status = SystemStatus.query.get_or_404((SystemStatus).order_by(SystemStatus.status_time.desc().first()))
-    # status = db.session.query(SystemStatus).order_by(SystemStatus.status_time.desc().first())
     status = SystemStatus.query.order_by(SystemStatus.status_time.desc()).first()
-
-    # db.session.query((SystemStatus).filter(SystemStatus.status_time == db.session.query(func.max(SystemStatus.status_time))
-    resp = jsonify(status=datetime.now())
+    resp = jsonify(status.to_dict())
     return resp, 200
 
 # Update database with status
 @bp.route('/status', methods=['POST'])
 def update_status():
     payload = request.get_json()
-    status_update = SystemStatus(status_state=payload['payload'])
+    status_update = SystemStatus(status_time=datetime.now(), status_state=payload['status_payload'])
     db.session.add(status_update)
     db.session.commit()
-    # Send back to robostub
-    resp = jsonify("OK")
+    resp = jsonify(payload)
+    resp.headers.set('Location', f'{request.base_url}{status_update.status_time}')
     return resp, 201
-    # resp = jsonify(new_item.to_dict())
-    # resp.headers.set('Location', f'{request.base_url}{status.status_time}')
 
 @bp.route('/scan', methods=['POST'])
 def start_scan(status_time):
