@@ -1,8 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
-from markupsafe import escape
 from json import loads
-import json
 
 from pantryflask.db import db
 from pantryflask.models import PantryItem

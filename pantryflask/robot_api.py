@@ -1,13 +1,13 @@
 import requests, os
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request
 from flask.helpers import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 from json import loads
 
 from pantryflask.db import db
-from pantryflask.models import RobotPreset
-from pantryflask.models import SystemStatus
+from pantryflask.models import RobotPreset, SystemStatus
+from pantryflask.auth import token_auth
 from json import loads
 from datetime import datetime
 
