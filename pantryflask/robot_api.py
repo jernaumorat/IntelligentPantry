@@ -6,7 +6,9 @@ from markupsafe import escape
 import os
 from pantryflask.db import db
 from pantryflask.models import RobotPreset
+from pantryflask.models import SystemStatus
 from json import loads
+from datetime import datetime
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
@@ -69,4 +71,27 @@ def put_image():
     img_file = request.files['image']
     img_file.save(os.path.join('.', 'static', 'camera.jpg'))
     resp = jsonify('OK')
+    return resp
+
+# Send status to app
+@bp.route('/status', methods=['GET'])
+def get_status():
+    status = SystemStatus.query.order_by(SystemStatus.status_time.desc()).first()
+    resp = jsonify(status.to_dict())
+    return resp, 200
+
+# Update database with status
+@bp.route('/status', methods=['POST'])
+def update_status():
+    payload = request.get_json()
+    status_update = SystemStatus(status_time=datetime.now(), status_state=payload['status_payload'])
+    db.session.add(status_update)
+    db.session.commit()
+    resp = jsonify("OK")
+    return resp, 201
+
+@bp.route('/scan', methods=['POST'])
+def start_scan():
+    url ='http://127.0.0.1:5050'
+    resp = requests.post(url+'/scan', payload = request.get_json())
     return resp

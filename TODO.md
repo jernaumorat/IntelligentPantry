@@ -10,7 +10,7 @@ TODO
   - [X] `/robot/control` POST (stub until robot ready)
   - [ ] `/robot/camera` POST
   - [ ] `/pantry/` POST (update to handle bulk data)
-  - [ ] `/pantry` DELETE
+  - [X] `/pantry` DELETE
 - [x] Update database models to reflect client changes
   - [x] Remove Audit/reciept model
   - [x] Add x/y coords to item model
