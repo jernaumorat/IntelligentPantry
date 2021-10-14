@@ -19,8 +19,8 @@ export const RobotCoordinate = (props: any): JSX.Element => {
     const [textXState, setTextXState] = useState('0');
     const [textYState, setTextYState] = useState('0');
 
-    const setxPos = (x: String) => setCoordState({ x: Number(x), y: coordState.y })
-    const setyPos = (y: String) => setCoordState({ x: coordState.x, y: Number(y) })
+    const setxPos = (x: String) => setCoordState({ x: Number(x) > 100 ? 100:Number(x) < 0 ? 0:Number(x), y: coordState.y })
+    const setyPos = (y: String) => setCoordState({ x: coordState.x, y:Number(y) > 100 ? 100:Number(y) < 0 ? 0:Number(y) })
 
     useEffect(() => {
         setTextXState(coordState.x.toString());
