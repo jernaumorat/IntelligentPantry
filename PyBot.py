@@ -9,6 +9,10 @@ import random
 #  server IP and Authorization Bearer Token
 URL = 'http://192.168.1.17:5000'
 TOKEN = 'testtoken'
+# need to ensure that a token has been added to the server
+#to add token run :  
+# flask add-system-token testtoken
+# where testtoken is the string you wish to use
 
 class PyBot(Bot):   
     VIEW_WIDTH  = 600
@@ -36,10 +40,8 @@ class PyBot(Bot):
         cropped_img = img.crop((offset_x,offset_y,offset_x + self.VIEW_WIDTH, offset_y + self.VIEW_HIEGHT))        
         img.close()
         cropped_img.save("camera.jpg")
-        fd =open('./camera.jpg', 'rb')
-        files = {'image': fd}
+        files = {'image': open('./camera.jpg', 'rb')}
         response = requests.post(URL+'/robot/camera', files=files, headers=self.getHeader())
-        fd.close()
         print(response.text)
         return "200"
     
@@ -75,10 +77,9 @@ class PyBot(Bot):
                 'item_x':random.randint(0,100),
                 'item_y':random.randint(0,100),
                 'image_key':item +'.jpg'
-            })
-            fd =  open('./images/' + item + '.jpg', 'rb')
-            filedescriptors.append(fd)
-            files[item+'.jpg']= (item + '.jpg','image/jpeg')
+            })            
+            # files[item+'.jpg']= (item + '.jpg','image/jpeg')
+            files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
         payload = {'payload':json.dumps(dataList)}        
         response = requests.post(URL+'/pantry/', files=files,data=payload, headers=self.getHeader())
         for fd in filedescriptors:
