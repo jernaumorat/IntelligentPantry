@@ -43,7 +43,7 @@ export const RobotCoordinate = (props: any): JSX.Element => {
                 <Text style={[style.textInput, { flex: 2.5, textAlign: 'right' }]}>Y</Text>
                 <TextInput key={coordState.y} style={[style.textInput, { flex: 5 }]} maxLength={4} value={textYState} onChangeText={setTextYState} onEndEditing={() => setyPos(textYState)} textAlign={'center'} keyboardType={'numeric'} selectTextOnFocus={true} contextMenuHidden={true} />
             </View>
-            <Button color='#1b7931' title={"Go"} onPress={() => { NetworkManager.postCoords(coordState) }} />
+            <Button color='#1b7931' title={"Go"} onPress={() => { props.postCoords(coordState) }} />
         </View>
     );
 }

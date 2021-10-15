@@ -115,7 +115,7 @@ export const RobotPreset = (props: any): JSX.Element => {
         setPresetList(presets);
 
         if (presets.length) setSelected(presets[0].presetId)
-        if (presets.length) setSelLabel(presets.filter(item => { return item.presetId === selected })[0].label)
+        if (presets.length) setSelLabel(presets.filter(item => { return item.presetId === presets[0].presetId })[0].label)
     }
 
     useEffect(() => {
