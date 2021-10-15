@@ -99,6 +99,7 @@ export namespace NetworkManager {
                 'Authorization': 'Bearer ' + bearer
             }
         })
+        if (res.status === 204) { return [] }
         pitems = await res.json();
 
         for (let item of pitems) {

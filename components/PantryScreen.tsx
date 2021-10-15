@@ -21,9 +21,9 @@ import { StorageManager } from '../StorageManager';
 const PantryStyles = StyleSheet.create({
   pantryItem: {
     flexDirection: 'row',
-    backgroundColor: 'white',
     // alignItems: 'center',
-    margin: 10,
+    margin: 5,
+    // marginVertical: 20,
   },
   pantryItemContent: {
     padding: 10,
@@ -108,11 +108,11 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic"
-      style={{ height: '100%', backgroundColor: colors.card }}
+      style={{ height: '100%', backgroundColor: colors.background }}
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}>
 
       <View style={{
-        backgroundColor: colors.card,
+        backgroundColor: colors.background,
       }}>
         <TextInput
           style={{
@@ -122,8 +122,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
             padding: 10,
             backgroundColor: "#ffffff",
           }}
-          placeholderTextColor='green'
-          // onChangeText={setSearchText}
+          placeholder="Search..."
           onChangeText={text => { setSearchText(text); searchFilterFunction(text) }}
           value={searchText}
         />
@@ -134,12 +133,14 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 }
 
 const PantryItem = (props: any): JSX.Element => {
+  const { colors } = useTheme();
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={[PantryStyles.pantryItem]}>
+      <View style={[PantryStyles.pantryItem, { backgroundColor: colors.card }]}>
         <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri, headers: { 'Authorization': 'Bearer ' + props.bearer } }} />
-        <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, }]}>{props.itemLabel}</Text>
-        <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, }]}>{props.itemQuant}</Text>
+        <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, color: colors.text }]}>{props.itemLabel}</Text>
+        <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, color: colors.text }]}>{props.itemQuant}</Text>
       </View>
     </TouchableOpacity>
   );

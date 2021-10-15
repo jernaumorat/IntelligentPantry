@@ -68,10 +68,9 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 </Text>
                 {props.control == "switch" ?
                     <Switch
+                        style={styles.switch}
                         value={devMode}
-                        onValueChange={() => props.actiion()}
-                        trackColor={{ false: "#a1a1a1", true: "#a1a1a1" }}
-                        thumbColor={devMode ? "#1e9e27" : "#f4f3f4"} /> : null
+                        onValueChange={() => props.actiion()} /> : null
                 }
             </View>
         </TouchableOpacity>
@@ -87,7 +86,7 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 renderItem={({ item }) => (Item(item))}
                 renderSectionHeader={({ section }) => (<Text style={{ ...styles.title, color: colors.text }}>{section.title}</Text>)}
                 keyExtractor={(item, index) => item.label + index}
-
+                scrollEnabled={false}
             />
         </View>
     )
@@ -100,8 +99,10 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: "row",
-        backgroundColor: "#1b7931",
-        padding: 15,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        height: 60,
         marginVertical: 1
     },
     critical: {
@@ -112,5 +113,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
         fontSize: 22
-    }
+    },
+    switch: {
+        margin: 0,
+        padding: 0,
+        height: '80%'
+    },
 });

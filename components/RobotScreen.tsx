@@ -17,7 +17,7 @@ import { RobotCoordinate } from './RobotCoordinate';
 import { Coords, DEFAULT_URL } from '../NetworkManager';
 import { StorageManager } from '../StorageManager';
 
-export const RobotScreen = (props: any): JSX.Element => {
+export const RobotScreen = (): JSX.Element => {
     const [imgSrc, setImgSrc] = useState({ uri: DEFAULT_URL, headers: { 'Authorization': 'Bearer ' } })
     const [coordState, setCoordState] = useState<Coords>({ x: 0, y: 0 })
     const updateCoords = (coords: Coords) => setCoordState(coords)

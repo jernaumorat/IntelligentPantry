@@ -110,7 +110,6 @@ export const RobotPreset = (props: any): JSX.Element => {
         update_state()
     }, [])
 
-    const style = makeStyles(colors)
     return (<>
         <PresetDeleteDialog
             visible={deleteVis}
@@ -125,8 +124,8 @@ export const RobotPreset = (props: any): JSX.Element => {
             handleEdit={(text: string) => { setNewLabel(text) }}
         />
         <View style={{ flex: 2, flexDirection: 'row' }}>
-            <View style={[style.pickerView, { flex: 7 }]}>
-                <Picker style={style.pickerStyle}
+            <View style={[styles.pickerView, { flex: 7 }]}>
+                <Picker style={styles.pickerStyle}
 
                     selectedValue={selected} onValueChange={itemVal => {
                         setSelected(itemVal)
@@ -135,7 +134,7 @@ export const RobotPreset = (props: any): JSX.Element => {
                     {components_from_presets(presetList)}
                 </Picker>
             </View>
-            <View style={[style.pickerView, { flex: 3 }]}>
+            <View style={[styles.pickerView, { flex: 3 }]}>
                 <Button title={"Recall"} color='#1b7931' onPress={preset_recall} />
                 <Button title={"Create"} color='#1b7931' onPress={() => { setCreateVis(true) }} />
                 <Button title={"Delete"} color='#1b7931' onPress={() => { setDeleteVis(true) }} />
@@ -144,25 +143,12 @@ export const RobotPreset = (props: any): JSX.Element => {
     </>);
 }
 
-const makeStyles = (colors: any) => StyleSheet.create({
+const styles = StyleSheet.create({
     pickerView: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-
-        borderColor: colors.text,
-        borderBottomWidth: 1,
-        width: 300,
-        marginTop: 15,
-        marginLeft: 20,
-        marginRight: 20,
-        borderRadius: 10,
-        alignSelf: 'center',
-
-
     },
     pickerStyle: {
-        width: "100%",
-
 
     }
 });
