@@ -1,6 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { DEFAULT_URL, NetworkManager, PItem } from './NetworkManager'
+import {
+    DEFAULT_URL,
+    NetworkManager,
+    PItem
+} from './NetworkManager'
 
 export namespace StorageManager {
     export const getPantryItems = async () => {

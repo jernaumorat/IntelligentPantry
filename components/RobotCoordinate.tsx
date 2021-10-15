@@ -2,14 +2,14 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import {
     View,
     Button,
     StyleSheet,
     TextInput,
-    Text,
-
 } from 'react-native';
+
 import { NetworkManager } from '../NetworkManager';
 
 export const RobotCoordinate = (props: any): JSX.Element => {

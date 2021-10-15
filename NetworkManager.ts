@@ -1,4 +1,3 @@
-import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
 import { StorageManager } from "./StorageManager";
 
 export const DEFAULT_URL = 'http://intpantry._http._tcp.local:5000'

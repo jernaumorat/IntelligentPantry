@@ -1,12 +1,11 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+import React from 'react';
+
 import {
     View,
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/AntDesign';
 
 export const RobotControls = (props: any): JSX.Element => {

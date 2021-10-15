@@ -1,12 +1,39 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+    useEffect,
+    useRef,
+    useState
+} from "react";
 
-import { ActivityIndicator, GestureResponderEvent, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableNativeFeedback, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from "react-native";
+import {
+    ActivityIndicator,
+    GestureResponderEvent,
+    Keyboard,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    useColorScheme,
+    View
+} from "react-native";
 
-import { NavigationContainer, DarkTheme, DefaultTheme, useTheme, useFocusEffect } from "@react-navigation/native";
+import {
+    NavigationContainer,
+    DarkTheme,
+    DefaultTheme,
+    useTheme,
+    useFocusEffect
+} from "@react-navigation/native";
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NetworkManager, DEFAULT_URL } from "./NetworkManager";
+
+import {
+    NetworkManager,
+    DEFAULT_URL
+} from "./NetworkManager";
+
 import { StorageManager } from "./StorageManager";
-import SplashScreen from "react-native-splash-screen";
 
 const wait = (timeout: number): Promise<number> => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -348,10 +375,6 @@ const FREnd: React.FC<{ navigation: any, endFR: () => void }> = ({ navigation, e
 }
 
 const FirstRunApp: React.FC<{ endFR: () => void }> = ({ endFR }) => {
-    useEffect(() => {
-        SplashScreen.hide()
-    }, [])
-
     return (
         <NavigationContainer theme={useColorScheme() == 'dark' ? DarkTheme : DefaultTheme}>
             <FRStack.Navigator>

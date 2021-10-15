@@ -7,17 +7,13 @@ import {
     View,
     Button,
     StyleSheet,
-    PlatformColor,
-    SliderComponent
 } from 'react-native';
 
 import {
     Picker
 } from '@react-native-picker/picker';
 
-import
-Dialog
-    from 'react-native-dialog';
+import Dialog from 'react-native-dialog';
 
 import { NetworkManager, Preset } from '../NetworkManager';
 import { useTheme } from '@react-navigation/native';
@@ -62,8 +58,13 @@ export const RobotPreset = (props: any): JSX.Element => {
 
     const components_from_presets = (data: Preset[]): JSX.Element[] => {
         const final = []
+
         for (let preset of data) {
             final.push(<Picker.Item key={preset.presetId} color={colors.text} label={preset.label} value={preset.presetId} />)
+        }
+
+        if (!final.length) {
+            final.push(<Picker.Item key={'placeholder'} color={colors.text} label={'No presets yet...'} />)
         }
 
         return final
@@ -99,16 +100,26 @@ export const RobotPreset = (props: any): JSX.Element => {
     }
 
     const update_state = async () => {
-        const presets: Preset[] = await NetworkManager.getPresets();
+        let presets: Preset[]
+        try {
+            presets = await NetworkManager.getPresets();
+        } catch (e) {
+            presets = []
+        }
         setPresetList(presets);
 
-        setSelected(presets[0].presetId)
-        setSelLabel(presets.filter(item => { return item.presetId === selected })[0].label)
+        if (presets.length) setSelected(presets[0].presetId)
+        if (presets.length) setSelLabel(presets.filter(item => { return item.presetId === selected })[0].label)
     }
 
     useEffect(() => {
         update_state()
     }, [])
+
+    const pickerSelect = (itemVal: number) => {
+        setSelected(itemVal)
+        setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
+    }
 
     return (<>
         <PresetDeleteDialog
@@ -127,17 +138,14 @@ export const RobotPreset = (props: any): JSX.Element => {
             <View style={[styles.pickerView, { flex: 7 }]}>
                 <Picker style={styles.pickerStyle}
 
-                    selectedValue={selected} onValueChange={itemVal => {
-                        setSelected(itemVal)
-                        setSelLabel(presetList.filter(item => { return item.presetId === itemVal })[0].label)
-                    }}>
+                    selectedValue={selected} onValueChange={presetList.length ? pickerSelect : () => { }}>
                     {components_from_presets(presetList)}
                 </Picker>
             </View>
             <View style={[styles.pickerView, { flex: 3 }]}>
-                <Button title={"Recall"} color='#1b7931' onPress={preset_recall} />
                 <Button title={"Create"} color='#1b7931' onPress={() => { setCreateVis(true) }} />
-                <Button title={"Delete"} color='#1b7931' onPress={() => { setDeleteVis(true) }} />
+                <Button title={"Recall"} color='#1b7931' onPress={preset_recall} disabled={!presetList.length} />
+                <Button title={"Delete"} color='#1b7931' onPress={() => { setDeleteVis(true) }} disabled={!presetList.length} />
             </View>
         </View>
     </>);

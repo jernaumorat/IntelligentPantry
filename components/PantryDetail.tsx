@@ -10,7 +10,6 @@ import {
     Image,
 } from 'react-native';
 
-import { StorageManager } from '../StorageManager';
 import { NetworkManager, PDetail } from '../NetworkManager';
 import { useTheme } from '@react-navigation/native';
 
@@ -55,6 +54,7 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     useEffect(() => {
         update_state()
     }, [])
+
     const { colors } = useTheme();
     const pdStyles = makeStyles(colors)
     return (
