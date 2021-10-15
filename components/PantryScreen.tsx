@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2021 PS2106, licensed under the MIT License, 
+ * the full text of which can be found under LICENSE.md at the top level of this repository,
+ * or at https://mit-license.org
+ */
+
 import React, {
   useState,
   useEffect,
@@ -21,9 +27,7 @@ import { StorageManager } from '../StorageManager';
 const PantryStyles = StyleSheet.create({
   pantryItem: {
     flexDirection: 'row',
-    // alignItems: 'center',
     margin: 5,
-    // marginVertical: 20,
   },
   pantryItemContent: {
     padding: 10,

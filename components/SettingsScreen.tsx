@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2021 PS2106, licensed under the MIT License, 
+ * the full text of which can be found under LICENSE.md at the top level of this repository,
+ * or at https://mit-license.org
+ */
+
 import React, { useState } from 'react';
 
 import {
@@ -8,6 +14,7 @@ import {
     View,
     Switch,
     TouchableOpacity,
+    Linking,
 } from 'react-native';
 
 import { useTheme } from "@react-navigation/native";
@@ -45,9 +52,35 @@ export const PairDialog: React.FC<{ visible: boolean, code: string, handleCancel
     )
 }
 
+export const CreditsDialog: React.FC<{ visible: boolean, handleCancel: () => void }> = ({ visible, handleCancel }): JSX.Element => {
+    return (
+        <View>
+            <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
+                <Dialog.Title style={{ fontSize: 30 }}>PS2106</Dialog.Title>
+                <Dialog.Description style={{ fontSize: 21, textAlign: 'center' }}>
+                    Nathaniel Munk
+                </Dialog.Description>
+                <Dialog.Description style={{ fontSize: 18, textAlign: 'center', marginBottom: 10, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://github.com/jernaumorat')}>
+                    @jernaumorat
+                </Dialog.Description>
+                <Dialog.Description style={{ fontSize: 21, textAlign: 'center', marginBottom: 10 }}>
+                    Blake Edwards
+                </Dialog.Description>
+                <Dialog.Description style={{ fontSize: 21, textAlign: 'center', marginBottom: 10 }}>
+                    Bonita Sachdeva
+                </Dialog.Description>
+                <Dialog.Description style={{ fontSize: 21, textAlign: 'center' }}>
+                    Sammy Haque
+                </Dialog.Description>
+            </Dialog.Container>
+        </View>
+    )
+}
+
 export const SettingsScreen: React.FC<{ devMode: boolean, setDevMode: (dm: boolean) => void }> = ({ devMode, setDevMode }) => {
     const [pairVisible, setPairVisible] = useState(false)
     const [resetVisible, setResetVisible] = useState(false)
+    const [creditsVisible, setCreditsVisible] = useState(false)
     const [pairCode, setPairCode] = useState('')
 
     const { colors } = useTheme()
@@ -88,9 +121,10 @@ export const SettingsScreen: React.FC<{ devMode: boolean, setDevMode: (dm: boole
         }
     ];
 
-    const handleCancel = (dia: 'pair' | 'reset') => {
+    const handleCancel = (dia: 'pair' | 'reset' | 'credits') => {
         if (dia === 'pair') { setPairVisible(false) }
-        else { setResetVisible(false) }
+        if (dia === 'reset') { setResetVisible(false) }
+        if (dia === 'credits') { setCreditsVisible(false) }
     }
 
     const handleReset = () => {
@@ -102,6 +136,7 @@ export const SettingsScreen: React.FC<{ devMode: boolean, setDevMode: (dm: boole
     const Item = (props: any) => <>
         <PairDialog visible={pairVisible} code={pairCode} handleCancel={() => handleCancel('pair')} />
         <ResetDialog visible={resetVisible} handleCancel={() => handleCancel('reset')} handleReset={handleReset} />
+        <CreditsDialog visible={creditsVisible} handleCancel={() => handleCancel('credits')} />
         <TouchableOpacity onPress={() => props.actiion()}>
             <View style={{ ...styles.item, backgroundColor: colors.card, }}>
                 {/* inline syting condition for critical items */}
@@ -130,6 +165,14 @@ export const SettingsScreen: React.FC<{ devMode: boolean, setDevMode: (dm: boole
                 keyExtractor={(item, index) => item.label + index}
                 scrollEnabled={false}
             />
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, }}>
+                <Text style={{ color: colors.text, }}>Copyright © 2021</Text>
+                <Text style={{ color: colors.text, }} onLongPress={() => setCreditsVisible(true)}> PS2106</Text>
+                <Text style={{ color: colors.text, }}>, licensed under the</Text>
+                <TouchableOpacity onPress={() => Linking.openURL('https://mit-license.org')}>
+                    <Text style={{ color: colors.text, textDecorationLine: 'underline' }}> MIT License</Text></TouchableOpacity>
+                <Text style={{ color: colors.text, }}>.</Text>
+            </View>
         </View>
     )
 }
