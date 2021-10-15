@@ -41,7 +41,7 @@ const makeStyles = (colors: any) => StyleSheet.create({
 })
 
 
-export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
+export const PantryDetail = ({ route, navigation }: any,props: any): JSX.Element => {
     const [detailState, setDetailState] = useState<PDetail>();
 
     const { id } = route.params;
@@ -59,7 +59,7 @@ export const PantryDetail = ({ route, navigation }: any): JSX.Element => {
     const pdStyles = makeStyles(colors)
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
-            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: detailState?.uri }} />
+            <Image style={{ flex: 5, height: '100%', minWidth: '100%' }} source={{ uri: detailState?.uri,headers: { 'Authorization': 'Bearer ' + props.bearer } }} />
             <View style={{ flex: 5, flexDirection: 'column' }}>
                 <View style={[pdStyles.TableRow]}>
                     <Text style={[pdStyles.DetailHeader]}>Item ID</Text>
