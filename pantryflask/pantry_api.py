@@ -59,7 +59,7 @@ def get_item_image(itemID):
     return resp
 
 @bp.route('/', methods=['DELETE'])
-@token_auth.login_required(role=['user'])
+@token_auth.login_required(role=['system'])
 def delete_allitems():
     for item in PantryItem.query.all():
         db.session.delete(item)

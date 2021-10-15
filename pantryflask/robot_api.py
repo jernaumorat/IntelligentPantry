@@ -81,7 +81,7 @@ def put_image():
 
 # Send status to app
 @bp.route('/status', methods=['GET'])
-@token_auth.login_required(role=['user'])
+@token_auth.login_required(role=['system'])
 def get_status():
     status = SystemStatus.query.order_by(SystemStatus.status_time.desc()).first()
     resp = jsonify(status.to_dict())
@@ -89,7 +89,7 @@ def get_status():
 
 # Update database with status
 @bp.route('/status', methods=['POST'])
-@token_auth.login_required(role=['user'])
+@token_auth.login_required(role=['system'])
 def update_status():
     payload = request.get_json()
     status_update = SystemStatus(status_time=datetime.now(), status_state=payload['status_payload'])
@@ -99,7 +99,7 @@ def update_status():
     return resp, 201
 
 @bp.route('/scan', methods=['POST'])
-@token_auth.login_required(role=['user'])
+@token_auth.login_required(role=['system'])
 def start_scan():
     url ='http://127.0.0.1:5050'
     resp = requests.post(url+'/scan', payload = request.get_json())
