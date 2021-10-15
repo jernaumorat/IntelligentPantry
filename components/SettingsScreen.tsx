@@ -13,6 +13,8 @@ import {
 import { useTheme } from "@react-navigation/native";
 
 import Dialog from 'react-native-dialog';
+
+//@ts-ignore
 import RNRestart from 'react-native-restart';
 
 import { StorageManager } from '../StorageManager'

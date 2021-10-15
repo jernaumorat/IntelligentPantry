@@ -20,7 +20,7 @@ export const RobotControls = (props: any): JSX.Element => {
                 break;
             }
             case 'down': {
-                let y = coordState.y + 5 > 99 ? 99 : coordState.y + 5
+                let y = coordState.y + 5 > 100 ? 100 : coordState.y + 5
                 setCoordState({ ...coordState, y: y })
                 break;
             }
@@ -30,7 +30,7 @@ export const RobotControls = (props: any): JSX.Element => {
                 break;
             }
             case 'right': {
-                let x = coordState.x + 5 > 99 ? 99 : coordState.x + 5
+                let x = coordState.x + 5 > 100 ? 100 : coordState.x + 5
                 setCoordState({ ...coordState, x: x })
                 break;
             }
