@@ -7,11 +7,13 @@ import { PantryDetail } from './PantryDetail'
 
 const PantryStack = createNativeStackNavigator();
 
-export const PantryStackScreen = (): JSX.Element => {
+export const PantryStackScreen: React.FC<{ devMode: boolean }> = ({ devMode }) => {
     return (
         <PantryStack.Navigator>
-            <PantryStack.Screen name="AllItems" component={PantryScreen} options={{ headerShown: false }} />
-            <PantryStack.Screen name="Item Detail" component={PantryDetail} />
+            <PantryStack.Screen name="AllItems" options={{ headerShown: false }}>
+                {props => <PantryScreen {...props} devMode={devMode} />}
+            </PantryStack.Screen>
+            {devMode ? <PantryStack.Screen name="Item Detail" component={PantryDetail} /> : <></>}
         </PantryStack.Navigator>
     )
 }

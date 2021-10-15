@@ -45,15 +45,12 @@ export const PairDialog: React.FC<{ visible: boolean, code: string, handleCancel
     )
 }
 
-export const SettingsScreen = (props: any): JSX.Element => {
+export const SettingsScreen: React.FC<{ devMode: boolean, setDevMode: (dm: boolean) => void }> = ({ devMode, setDevMode }) => {
     const [pairVisible, setPairVisible] = useState(false)
     const [resetVisible, setResetVisible] = useState(false)
     const [pairCode, setPairCode] = useState('')
 
     const { colors } = useTheme()
-
-    const devMode = props.devMode
-    const setDevMode = props.setDevMode
 
     const MENU = [
         {

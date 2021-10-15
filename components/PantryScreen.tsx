@@ -35,7 +35,7 @@ const wait = (timeout: number): Promise<number> => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-export const PantryScreen = ({ navigation }: any): JSX.Element => {
+export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
@@ -70,7 +70,7 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
 
     for (let pItem of data) {
       final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
-        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} />);
+        onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} devMode={devMode} />);
     }
 
     return final
@@ -122,7 +122,8 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
             padding: 10,
             backgroundColor: "#ffffff",
           }}
-          placeholder="Search..."
+          placeholder={"Search..."}
+          placeholderTextColor={"#222222"}
           onChangeText={text => { setSearchText(text); searchFilterFunction(text) }}
           value={searchText}
         />
@@ -132,16 +133,21 @@ export const PantryScreen = ({ navigation }: any): JSX.Element => {
   )
 }
 
-const PantryItem = (props: any): JSX.Element => {
-  const { colors } = useTheme();
+const PantryItem: React.FC<{ itemUri: string, bearer: string, itemLabel: string, itemQuant: string, devMode: boolean, onPress: () => void }> =
+  ({ itemUri, bearer, itemLabel, itemQuant, devMode, onPress }) => {
+    const { colors } = useTheme();
 
-  return (
-    <TouchableOpacity onPress={props.onPress}>
+    const pitem = (
       <View style={[PantryStyles.pantryItem, { backgroundColor: colors.card }]}>
-        <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: props.itemUri, headers: { 'Authorization': 'Bearer ' + props.bearer } }} />
-        <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, color: colors.text }]}>{props.itemLabel}</Text>
-        <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, color: colors.text }]}>{props.itemQuant}</Text>
+        <Image style={[PantryStyles.pantryItemContent, { flex: 2, height: 100, aspectRatio: 1 }]} source={{ uri: itemUri, headers: { 'Authorization': 'Bearer ' + bearer } }} />
+        <Text style={[PantryStyles.pantryItemContent, { flex: 7, fontSize: 30, color: colors.text }]}>{itemLabel}</Text>
+        <Text style={[PantryStyles.pantryItemContent, { flex: 1, fontSize: 30, color: colors.text }]}>{itemQuant}</Text>
       </View>
-    </TouchableOpacity>
-  );
-};
+    )
+
+    return devMode ? (
+      <TouchableOpacity onPress={onPress}>
+        {pitem}
+      </TouchableOpacity>
+    ) : (pitem);
+  };

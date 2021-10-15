@@ -3,7 +3,10 @@
  *  All named functions should be annotated with their return type. All function parameters should be annotated with their data type. 
  */
 
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect,
+  useState
+} from 'react';
 
 import {
   useColorScheme,
@@ -66,8 +69,12 @@ const App = (): JSX.Element => {
         lazy: false
       })}>
         {devMode ? <Tab.Screen name="Robot" component={RobotScreen} /> : <></>}
-        <Tab.Screen name="Pantry" component={PantryStackScreen} />
-        <Tab.Screen name="Settings" children={() => <SettingsScreen devMode={devMode} setDevMode={devToggle} />} />
+        <Tab.Screen name="Pantry">
+          {props => <PantryStackScreen {...props} devMode={devMode} />}
+        </Tab.Screen>
+        <Tab.Screen name="Settings">
+          {props => <SettingsScreen {...props} devMode={devMode} setDevMode={devToggle} />}
+        </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );
