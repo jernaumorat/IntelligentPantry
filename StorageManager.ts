@@ -103,31 +103,31 @@ export namespace StorageManager {
         }
     }
 
-    export const getDarkMode = async () => {
+    export const getDevMode = async () => {
         try {
-            let data = await AsyncStorage.getItem('@darkMode');
+            let data = await AsyncStorage.getItem('@devMode');
             if (data) {
                 try {
                     return JSON.parse(data) as boolean
                 } catch (e) {
-                    await setDarkMode('system')
+                    await setDevMode(false)
                     console.log(e)
-                    return 'system'
+                    return false
                 }
             } else {
-                return 'system'
+                return false
             }
         } catch (e) {
-            await setDarkMode('system')
+            await setDevMode(false)
             console.log(e)
-            return 'system'
+            return false
         }
     }
 
-    export const setDarkMode = async (dmode: 'light' | 'dark' | 'system') => {
+    export const setDevMode = async (frun: boolean) => {
         try {
-            let json = JSON.stringify(dmode)
-            await AsyncStorage.setItem('@darkMode', json)
+            let json = JSON.stringify(frun)
+            await AsyncStorage.setItem('@devMode', json)
             return
         } catch (e) {
             console.log(e)
@@ -173,7 +173,7 @@ export namespace StorageManager {
         await setPantryItems([])
         await setURL(DEFAULT_URL)
         await setToken('')
-        await setDarkMode('system')
+        await setDevMode(false)
         await setFirstRun(true)
     }
 }

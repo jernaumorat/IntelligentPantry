@@ -1,7 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+import React, { useState } from 'react';
 
 import {
     StatusBar,
@@ -12,22 +9,50 @@ import {
     Switch,
     TouchableOpacity,
 } from 'react-native';
+
 import { useTheme } from "@react-navigation/native";
+
+import Dialog from 'react-native-dialog';
+import RNRestart from 'react-native-restart';
+
 import { StorageManager } from '../StorageManager'
 import { NetworkManager } from '../NetworkManager'
 
 
+export const ResetDialog: React.FC<{ visible: boolean, handleCancel: () => void, handleReset: () => void }> = ({ visible, handleCancel, handleReset }): JSX.Element => {
+    return (
+        <View>
+            <Dialog.Container visible={visible}>
+                <Dialog.Title>Delete Preset</Dialog.Title>
+                <Dialog.Description>Are you sure you want to reset all settings? This may require you to repair with the server if any other devices are paired.</Dialog.Description>
+                <Dialog.Button label='Cancel' onPress={handleCancel} />
+                <Dialog.Button label='Delete' onPress={handleReset} color='#ff2020' />
+            </Dialog.Container>
+        </View>
+    )
+}
+
+export const PairDialog: React.FC<{ visible: boolean, code: string, handleCancel: () => void }> = ({ visible, code, handleCancel }): JSX.Element => {
+    return (
+        <View>
+            <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
+                <Dialog.Title>Pairing Code</Dialog.Title>
+                <Dialog.Description style={{ fontSize: 50, textAlign: 'center' }}>{code}</Dialog.Description>
+            </Dialog.Container>
+        </View>
+    )
+}
+
 export const SettingsScreen = (props: any): JSX.Element => {
-    const colors = useTheme().colors
-    // load props
+    const [pairVisible, setPairVisible] = useState(false)
+    const [resetVisible, setResetVisible] = useState(false)
+    const [pairCode, setPairCode] = useState('')
+
+    const { colors } = useTheme()
+
     const devMode = props.devMode
     const setDevMode = props.setDevMode
-    //function called on devmode click. sets devMode prop for app.tsx to remove nav item
-    const onClickDevMode = () => {
-        setDevMode(!devMode);
-    }
-    // Menu item Strings
-    // control criti
+
     const MENU = [
         {
             title: "Robot",
@@ -40,7 +65,12 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 {
                     label: "Pair",
                     control: "text",
-                    actiion: () => { NetworkManager.getPairingCode(); }   /*need to insert correct function here*/
+                    actiion: () => {
+                        NetworkManager.getPairingCode().then(code => {
+                            setPairCode(code);
+                            setPairVisible(true);
+                        });
+                    }   /*need to insert correct function here*/
                 }]
         },
         {
@@ -54,12 +84,25 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 {
                     label: "Reset All Settings",
                     control: "critical text",
-                    actiion: () => { StorageManager.resetDefault();; }
+                    actiion: () => { setResetVisible(true); }
                 }]
         }
     ];
 
-    const Item = (props: any) => (
+    const handleCancel = (dia: 'pair' | 'reset') => {
+        if (dia === 'pair') { setPairVisible(false) }
+        else { setResetVisible(false) }
+    }
+
+    const handleReset = () => {
+        StorageManager.resetDefault().then(() => {
+            RNRestart.Restart()
+        });
+    }
+
+    const Item = (props: any) => <>
+        <PairDialog visible={pairVisible} code={pairCode} handleCancel={() => handleCancel('pair')} />
+        <ResetDialog visible={resetVisible} handleCancel={() => handleCancel('reset')} handleReset={handleReset} />
         <TouchableOpacity onPress={() => props.actiion()}>
             <View style={{ ...styles.item, backgroundColor: colors.card, }}>
                 {/* inline syting condition for critical items */}
@@ -74,7 +117,7 @@ export const SettingsScreen = (props: any): JSX.Element => {
                 }
             </View>
         </TouchableOpacity>
-    );
+    </>;
 
     return (
         <View style={{
