@@ -7,7 +7,7 @@ import requests
 import random
 
 #  server IP and Authorization Bearer Token
-URL = 'http://192.168.1.17:5000'
+URL = 'http://127.0.0.1:5000'
 TOKEN = 'testtoken'
 # need to ensure that a token has been added to the server
 # to add token run :
@@ -23,6 +23,7 @@ class PyBot(Bot):
         self.x = x
         self.y = y
         self.status = "idle"
+        print('pybot init')
 
     def moveTo(self, x, y):
         self.x = x
@@ -69,10 +70,8 @@ class PyBot(Bot):
         itemList = []
         for x in range(n):
             # index of item to add then pop added items to avoid duplicates
-            indx = random.randint(0, len(fullItemList)-1)
-            itemList.append(fullItemList[indx])
-            fullItemList.pop(indx)
-
+            item = random.choice(fullItemList)
+            itemList.append(item)
         #  list of dict items
         files = {}
         filedescriptors = []
