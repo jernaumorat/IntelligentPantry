@@ -80,6 +80,21 @@ export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
     return final
   }
 
+  const sortFilterFunction = (itemValue: string) => {
+    //function to sort data according to name and qty
+
+    if (itemValue === "Z-A") {
+      pStateFiltered.sort((a, b) => (a.label < b.label) ? 1 : -1);
+    } else if (itemValue === "A-Z") {
+      pStateFiltered.sort((a, b) => (a.label > b.label) ? 1 : -1);
+    } else if (itemValue === "ASC(Qty)") {
+      pStateFiltered.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
+    } else if (itemValue === "DESC(Qty)") {
+      pStateFiltered.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
+    }
+    // setSelectedValue(itemValue);
+  };
+
   const update_state = async (): Promise<void> => {
     setRefreshing(true)
     let data = await StorageManager.getPantryItems();
