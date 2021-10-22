@@ -4,7 +4,7 @@ from flask.helpers import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 from json import loads
-
+from pantryflask.valid_json import required_params
 from pantryflask.db import db
 from pantryflask.models import RobotPreset, SystemStatus
 from pantryflask.auth import token_auth
@@ -29,6 +29,7 @@ def get_presets():
     
 @bp.route('/presets', methods=['POST'])
 @token_auth.login_required(role=['user'])
+@required_params({"label":str,"preset_x":int,"preset_y":int})
 def add_preset():
     payload = request.get_json()
     new_item = RobotPreset(preset_label=payload['label'], preset_x=payload['preset_x'], preset_y=payload['preset_y'])    
@@ -85,7 +86,7 @@ def put_image():
 
 # Send status to app
 @bp.route('/status', methods=['GET'])
-@token_auth.login_required(role=['system'])
+@token_auth.login_required(role=['user'])
 def get_status():
     status = SystemStatus.query.order_by(SystemStatus.status_time.desc()).first()
     resp = jsonify(status.to_dict())
@@ -94,6 +95,7 @@ def get_status():
 # Update database with status
 @bp.route('/status', methods=['POST'])
 @token_auth.login_required(role=['system'])
+@required_params({"status_payload":str})
 def update_status():
     payload = request.get_json()
     status_update = SystemStatus(status_time=datetime.now(), status_state=payload['status_payload'])
@@ -103,7 +105,7 @@ def update_status():
     return resp, 201
 
 @bp.route('/scan', methods=['POST'])
-@token_auth.login_required(role=['system'])
+@token_auth.login_required(role=['user'])
 def start_scan():    
     try:
         resp = requests.post(url+'/scan', payload = request.get_json())

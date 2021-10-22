@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from json import loads
-
+from pantryflask.valid_json import pantry_post_required_params
 from pantryflask.db import db
 from pantryflask.models import PantryItem
 from pantryflask.auth import token_auth
@@ -28,6 +28,7 @@ def get_allitems():
 #   the request should also attach jpg files for each item with image_key as each images key
 @bp.route('/', methods=['POST'])
 @token_auth.login_required(role=['system'])
+@pantry_post_required_params({"label": str,"quantity":int,"item_x":int,"item_y":int,"image_key":str})
 def add_items():
     payload = loads(request.form.get('payload'))
     for data in payload:
