@@ -18,10 +18,12 @@ import {
   RefreshControl,
   TextInput,
   TouchableOpacity,
+  SectionList,
+  SectionListData,
 } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
-import { NetworkManager, PItem } from '../NetworkManager'
+import { NetworkManager, PItem, SItem } from '../NetworkManager'
 import { StorageManager } from '../StorageManager';
 
 const PantryStyles = StyleSheet.create({
@@ -39,61 +41,90 @@ const wait = (timeout: number): Promise<number> => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
+export const PantryScreen = ({ navigation, devMode, sortType, setSortType }: any): JSX.Element => {
   /* Create the state elements and their setter functions.
      This state will persist for the lifecycle of the component, and is tied to a single component instance.
      This is not a mechanism for passing state/data between components, but rather is a standin for class properties. */
-  const [pState, setpState] = useState<PItem[]>([])
-  const [pStateFiltered, setpStateFiltered] = useState<PItem[]>([]);
+  const [itemData, setItemData] = useState<PItem[]>([])
+  const [formattedData, setFormattedData] = useState<SItem[]>([]);
+  const [filterText, setFilterText] = useState("");
+
   const [isRefreshing, setRefreshing] = useState(true)
   const [bearer, setBearer] = useState("");
-  const [searchText, setSearchText] = useState("");
 
   const { colors } = useTheme();
 
-  const searchFilterFunction = (text: string) => {
-    // Check if searched text is not blank
+  const data_initials = (data: PItem[]): string[] => {
+    const initials: string[] = []
+
+    for (const item of data) {
+      const i = item.label[0].toUpperCase()
+      if (!initials.includes(i)) { initials.push(i) }
+    }
+
+    return initials
+  }
+
+  const filter_data = (text: string, data: PItem[]): PItem[] => {
     if (text) {
-      const newData = pState.filter(
-        function (item) {
-          const itemData = item.label
-            ? item.label.toUpperCase()
-            : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        });
-      setpStateFiltered(newData);
+      const newData = data.filter(item => {
+        return item.label
+          .toUpperCase()
+          .indexOf(text.toUpperCase()) > -1;
+      });
+      return newData
     } else {
-      setpStateFiltered(pState);
+      return data
     }
   };
+
+  const sort_data = (sortType: { sort: 'alpha' | 'quant', direction: 'asc' | 'dsc' }, data: PItem[]) => {
+    const d = data
+
+    if (sortType.sort === "alpha") {
+      if (sortType.direction === "asc") {
+        d.sort((a, b) => (a.label > b.label) ? 1 : -1);
+      } else {
+        d.sort((a, b) => (a.label < b.label) ? 1 : -1);
+      }
+    } else {
+      if (sortType.direction === "asc") {
+        d.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
+      } else {
+        d.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
+      }
+    };
+
+    return d
+  }
+
+  const section_data = (sortType: { sort: 'alpha' | 'quant', direction: 'asc' | 'dsc' }, data: PItem[]): SItem[] => {
+    if (sortType.sort === 'quant') {
+      return [
+        { initial: 'QUANTITY', data: [...data] }
+      ]
+    }
+
+    const initials = data_initials(data)
+    const d = []
+    for (const i of initials) {
+      d.push({ initial: i, data: [...data.filter(it => it.label[0].toUpperCase() === i)] })
+    }
+
+    return d
+  }
 
   /* Generates the PantryItem components from an array of PItem objects, returns array of JSX components */
   const components_from_pitems = (data: PItem[]): JSX.Element[] => {
     const final = []
 
-    for (let pItem of data) {
+    for (const pItem of data) {
       final.push(<PantryItem key={pItem.id} itemUri={pItem.uri} itemLabel={pItem.label} itemQuant={pItem.quantity.toString()} bearer={bearer}
         onPress={() => { navigation.navigate('Item Detail', { id: pItem.id }) }} devMode={devMode} />);
     }
 
     return final
   }
-
-  const sortFilterFunction = (itemValue: string) => {
-    //function to sort data according to name and qty
-
-    if (itemValue === "Z-A") {
-      pStateFiltered.sort((a, b) => (a.label < b.label) ? 1 : -1);
-    } else if (itemValue === "A-Z") {
-      pStateFiltered.sort((a, b) => (a.label > b.label) ? 1 : -1);
-    } else if (itemValue === "ASC(Qty)") {
-      pStateFiltered.sort((a, b) => (a.quantity > b.quantity) ? 1 : -1);
-    } else if (itemValue === "DESC(Qty)") {
-      pStateFiltered.sort((a, b) => (a.quantity < b.quantity) ? 1 : -1);
-    }
-    // setSelectedValue(itemValue);
-  };
 
   const update_state = async (): Promise<void> => {
     setRefreshing(true)
@@ -103,13 +134,11 @@ export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
       data = d
     })
 
-    setpState(data)
-    setpStateFiltered(data)
+    setItemData(data)
 
     await wait(1000).then(() => { setRefreshing(false) })
   }
 
-  const pItem_components = pStateFiltered ? components_from_pitems(pStateFiltered) : []
 
   /* useEffect(func, []) runs func when component is first loaded. 
      The return statement of func expects a callback or lambda, and is executed when the component is cleaned up.
@@ -125,11 +154,19 @@ export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
     }
   }, [])
 
-  return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic"
-      style={{ height: '100%', backgroundColor: colors.background }}
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}>
+  useEffect(() => {
+    const format_data = (data: PItem[]): SItem[] => {
+      let d = data
+      d = filter_data(filterText, d)
+      d = sort_data(sortType, d)
+      return section_data(sortType, d)
+    }
 
+    setFormattedData(format_data(itemData))
+  }, [itemData, filterText, sortType.direction, sortType.sort])
+
+  return (
+    <>
       <View style={{
         backgroundColor: colors.background,
       }}>
@@ -143,12 +180,29 @@ export const PantryScreen = ({ navigation, devMode }: any): JSX.Element => {
           }}
           placeholder={"Search..."}
           placeholderTextColor={"#222222"}
-          onChangeText={text => { setSearchText(text); searchFilterFunction(text) }}
-          value={searchText}
+          onChangeText={setFilterText}
+          value={filterText}
         />
       </View>
-      {pItem_components}
-    </ScrollView>
+      <SectionList
+        sections={formattedData}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={update_state} />}
+        renderSectionHeader={({ section: { initial } }) => {
+          return initial === 'QUANTITY' ? <View style={{ marginTop: 5 }} /> :
+            <Text style={{ color: colors.text, fontSize: 25, marginTop: 5, marginLeft: 5 }}>{initial}</Text>
+        }}
+        renderItem={({ item }) => (
+          <PantryItem
+            key={item.id}
+            itemUri={item.uri}
+            itemLabel={item.label}
+            itemQuant={item.quantity.toString()}
+            bearer={bearer}
+            devMode={devMode}
+            onPress={() => { navigation.navigate('Item Detail', { id: item.id }) }} />
+        )}
+      />
+    </>
   )
 }
 

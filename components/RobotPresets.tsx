@@ -142,9 +142,12 @@ export const RobotPreset = (props: any): JSX.Element => {
         />
         <View style={{ flex: 2, flexDirection: 'row' }}>
             <View style={[styles.pickerView, { flex: 7 }]}>
-                <Picker style={styles.pickerStyle}
-
-                    selectedValue={selected} onValueChange={presetList.length ? pickerSelect : () => { }}>
+                <Picker
+                    style={styles.pickerStyle}
+                    enabled={!!presetList.length}
+                    mode={'dropdown'}
+                    selectedValue={selected}
+                    onValueChange={presetList.length ? pickerSelect : () => { }}>
                     {components_from_presets(presetList)}
                 </Picker>
             </View>

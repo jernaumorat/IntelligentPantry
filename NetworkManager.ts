@@ -26,6 +26,11 @@ export interface PDetail extends PItem {
     coords: Coords
 }
 
+export interface SItem {
+    initial: string,
+    data: PItem[]
+}
+
 export interface Preset {
     presetId: number,
     label: string,
