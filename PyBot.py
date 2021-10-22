@@ -82,9 +82,7 @@ class PyBot(Bot):
             files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
         payload = {'payload':json.dumps(dataList)}        
         response = requests.post(URL+'/pantry/', files=files,data=payload, headers=self.getHeader())
-        for fd in filedescriptors:
-            fd.close()
-
+        
         return 
     
     # Todo scan pantry    
