@@ -8,6 +8,7 @@ from pantryflask.valid_json import required_params
 from pantryflask.db import db
 from pantryflask.models import RobotPreset, SystemStatus
 from pantryflask.auth import token_auth
+from requests.exceptions import ConnectionError
 from json import loads
 from datetime import datetime
 
@@ -108,7 +109,8 @@ def update_status():
 @token_auth.login_required(role=['user'])
 def start_scan():    
     try:
-        resp = requests.post(url+'/scan', payload = request.get_json())
+        resp = requests.post(url+'/scan')
     except ConnectionError:
         return "Bad Gateway",502
-    return resp
+    resp = jsonify("OK")
+    return resp, 200
