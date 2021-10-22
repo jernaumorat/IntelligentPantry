@@ -12,6 +12,7 @@ from json import loads
 from datetime import datetime
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
+url ='http://127.0.0.1:5050'
 
 @bp.route('/presets', methods=['GET'])
 @token_auth.login_required(role=['user'])
@@ -53,11 +54,14 @@ def delete_preset(presetID):
 
 @bp.route('/control', methods=['POST'])
 @token_auth.login_required(role=['user'])
+@required_params({"x": int,"y": int})
 def call_position():
     payload = request.get_json()
     print(payload['x'], payload['y'])
-    url ='http://127.0.0.1:5050/moveTo'
-    response = requests.post(url,json=payload)
+    try:
+        response = requests.post(url+ "/moveTo",json=payload)
+    except ConnectionError:
+        return "Bad Gateway",502
     
     return response.text
 
@@ -100,7 +104,9 @@ def update_status():
 
 @bp.route('/scan', methods=['POST'])
 @token_auth.login_required(role=['system'])
-def start_scan():
-    url ='http://127.0.0.1:5050'
-    resp = requests.post(url+'/scan', payload = request.get_json())
+def start_scan():    
+    try:
+        resp = requests.post(url+'/scan', payload = request.get_json())
+    except ConnectionError:
+        return "Bad Gateway",502
     return resp
