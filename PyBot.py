@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify, request, make_response
-from io import StringIO
+from flask import request
+from requests.exceptions import ConnectionError
 from PIL import Image
 from Bot import Bot
 import json
@@ -40,19 +40,22 @@ class PyBot(Bot):
         cropped_img = img.crop((offset_x,offset_y,offset_x + self.VIEW_WIDTH, offset_y + self.VIEW_HIEGHT))        
         img.close()
         cropped_img.save("camera.jpg")
-        files = {'image': open('./camera.jpg', 'rb')}
-        response = requests.post(URL+'/robot/camera', files=files, headers=self.getHeader())
-        print(response.text)
+        try:
+            files = {'image': open('./camera.jpg', 'rb')}
+            response = requests.post(URL+'/robot/camera', files=files, headers=self.getHeader())
+        except ConnectionError:
+            return "Bad Gateway",502
         return "200"
     
     # Todo system state scan /idle date and time
     def updateStatus(self):
         payload = {'status_payload':json.dumps(self.status)}
-        
-        response = requests.post(URL+'/robot/status', json=payload, headers=self.getHeader())
-        # response = requests.post('https://httpbin.org/post', json=payload)
+        try:
+            response = requests.post(URL+'/robot/status', json=payload, headers=self.getHeader())
+        except ConnectionError:
+            return "Bad Gateway",502
+        # response = requests.post('https://httpbin.org/post', json=payload) #debuging and feedback tool
         # response = requests.get('https://httpbin.org/post', json=payload)
-        print(response.text)
 
     def sendItems(self):
         fullItemList = ['apple','banana','nutrigrain','rice','weetbix','coffee','tea','pasta','tuna','corn','beans','lentals','milk','sauce','sugar','salt','jam','migoreng','chocolate','eggs']
@@ -80,20 +83,28 @@ class PyBot(Bot):
             })            
             # files[item+'.jpg']= (item + '.jpg','image/jpeg')
             files[item+'.jpg']= (item + '.jpg', open('./images/' + item + '.jpg', 'rb'),'image/jpeg')
-        payload = {'payload':json.dumps(dataList)}        
-        response = requests.post(URL+'/pantry/', files=files,data=payload, headers=self.getHeader())
-        
-        return 
+        payload = {'payload':json.dumps(dataList)}
+        try:
+            response = requests.post(URL+'/pantry/', files=files,data=payload, headers=self.getHeader())
+        except ConnectionError:
+            print("Bad Gateway 502")
+            return "Bad Gateway",502
+        print(response)
+        return
     
     # Todo scan pantry    
     def scan(self):
         self.status = 'busy'
         self.updateStatus()
-        response = requests.delete(URL+'/pantry/',headers=self.getHeader())
+        try:
+            response = requests.delete(URL+'/pantry/',headers=self.getHeader())
+        except ConnectionError:
+            print("Bad Gateway 502")
+            return "Bad Gateway",504
         self.sendItems()
         self.status = 'idle'
         self.updateStatus()
-        return 
+        return "ok",200
         
     def getHeader(self):
         return {'Authorization': 'Bearer ' + TOKEN}
