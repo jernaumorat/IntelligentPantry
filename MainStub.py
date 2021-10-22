@@ -51,25 +51,31 @@ def index():
     return bot.getImage()
 
 # need to replace this and instead of having an endpooint that is call instead  the robot should post an image when it is ready
-# this way the app can all up the 
-@app.route('/camera',methods=['GET'])
+# this way the app can all up the
+
+
+@app.route('/camera', methods=['GET'])
 def get_image():
     bot.getImage()
     # send_file pil.getbytes
-    #flask command send_file  bytes_io
+    # flask command send_file  bytes_io
     resp = send_from_directory(os.path.join('./'), 'camera.jpg')
-    # resp = make_response(image.load(),200)    
+    # resp = make_response(image.load(),200)
     resp.headers.set('Content-Type', 'image/jpeg')
     return resp
 
 # endpoint to get status
-@app.route('/status',methods=['GET'])
+
+
+@app.route('/status', methods=['GET'])
 def get_status():
     resp = jsonify(bot.updateStatus())
-    return resp   
+    return resp
 
 # GET allows browser to trigger scan
-@app.route('/scan',methods=['POST','GET'])
+
+
+@app.route('/scan', methods=['POST', 'GET'])
 def get_scan():
     # a true bot scan will need to be implimented on to it's own thread so app and server aren't waiting for robot to finish
     bot.scan()
