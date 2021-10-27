@@ -71,7 +71,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 20
     },
     FRBodyText: {
-
+        fontSize: 18,
+        textAlign: 'center',
+        marginHorizontal: 40
     },
     FRCodeEntry: {
         width: 60,
@@ -202,7 +204,7 @@ const FRWelcome: React.FC<{ navigation: any }> = ({ navigation }) => {
             </View>
             <View style={styles.FRBody}>
                 <Text style={{ ...styles.FRBodyText, color: useTheme().colors.text }}>
-
+                    We'll now get you set up with your Intelligent Pantry Appliance...
                 </Text>
             </View>
             <View style={styles.FRFooter}>
@@ -368,10 +370,14 @@ const FREnd: React.FC<{ navigation: any, endFR: () => void }> = ({ navigation, e
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
             <View style={styles.FRHeader}>
-
+                <Text style={{ ...styles.FRTitleText, color: useTheme().colors.text }}>
+                    Congratulations!
+                </Text>
             </View>
             <View style={styles.FRBody}>
-
+                <Text style={{ ...styles.FRBodyText, color: useTheme().colors.text }}>
+                    You're all set up!{'\n'}Enjoy using your Intelligent Pantry!
+                </Text>
             </View>
             <View style={styles.FRFooter}>
                 <FRNextButton navCallback={(_) => { endFR() }} last={true} />
@@ -385,11 +391,11 @@ const FirstRunApp: React.FC<{ endFR: () => void }> = ({ endFR }) => {
         <NavigationContainer theme={useColorScheme() == 'dark' ? DarkTheme : DefaultTheme}>
             <FRStack.Navigator>
                 {/* <FRStack.Navigator screenOptions={{ headerShown: false }}> */}
-                <FRStack.Screen name="Welcome" component={FRWelcome} />
-                <FRStack.Screen name="Pair" component={FRPair} />
-                <FRStack.Screen name="Code" component={FRCode} />
-                <FRStack.Screen name="Network" component={FRNetwork} />
-                <FRStack.Screen name="End">
+                <FRStack.Screen name="Welcome" component={FRWelcome} options={{ headerShown: false }} />
+                <FRStack.Screen name="Pair" component={FRPair} options={{ headerShown: false }} />
+                <FRStack.Screen name="Code" component={FRCode} options={{ headerShown: false }} />
+                <FRStack.Screen name="Network" component={FRNetwork} options={{ headerShown: false }} />
+                <FRStack.Screen name="End" options={{ headerShown: false }}>
                     {props => <FREnd {...props} endFR={endFR} />}
                 </FRStack.Screen>
             </FRStack.Navigator>
